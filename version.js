@@ -4,8 +4,9 @@
 self.APP_VERSION = "1.0.0";
 self.CHANGELOG = [
   { version: "1.0.0", date: "2026-11-04", changes: [
-    "Prvá verzia: 9 tém gramatiky z Unit 1 a 2 (have got, have, like, I'd like, Can I use your …?).",
+    "Prvá verzia: gramatika z učebnice pre 3. ročník, Unit 1–10, rozdelená podľa lekcií (Lesson 1–5, Project and Review).",
     "Každá téma má 6 krokov: pravidlo, doplň, odpovedz, počúvaj, poskladaj vetu a napíš.",
-    "Opakovanie s výberom tém, spôsobu a počtu viet."
+    "Vety sa tvoria zo slovíčok z príslušného unitu a lekcie.",
+    "Lesson 4 a Project ponúkajú opakovanie celého unitu, karta Opakovanie mieša vybrané unity."
   ]}
 ];
