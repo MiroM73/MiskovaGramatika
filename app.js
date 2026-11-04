@@ -101,7 +101,7 @@ const s3=p=>PR[p].s3, sb=p=>PR[p].en, Sb=p=>cap(PR[p].en);
 const hv=p=>s3(p)?"has":"have", dz=p=>s3(p)?"does":"do", ap=p=>s3(p)?"'s":"'ve";
 const swapH=v=>v==="has"?"have":"has", swapD=v=>v==="does"?"do":"does";
 const ansP=p=>p==="you"?"I":p==="I"?"you":p;   // "Have you…?" – "Yes, I have."
-const short=(p,yes,aux)=>{const a=ansP(p),v=aux==="have"?hv(a):aux==="do"?dz(a):aux;return (yes?"Yes, ":"No, ")+sb(a)+" "+(yes?v:NT[v])+"."};
+const short=(p,yes,aux,self)=>{const a=self?p:ansP(p),v=aux==="have"?hv(a):aux==="do"?dz(a):aux;return (yes?"Yes, ":"No, ")+sb(a)+" "+(yes?v:NT[v])+"."};
 const skQ=(p,v,rest)=>cap(v)+(p==="you"?"":" "+PR[p].sk.toLowerCase())+" "+rest+"?";
 const TVOJ={m:"tvoj",ma:"tvojho",f:"tvoju",n:"tvoje",p:"tvoje"}, SVOJ={m:"svoj",ma:"svojho",f:"svoju",n:"svoje",p:"svoje"};
 const RAD={m:"rád",f:"rada",n:"rado",p:"radi"};
@@ -185,8 +185,8 @@ function gapOf(aux,s,P,f){
   return f==="pos"?gp(S,h,"got "+P.c+".",shuffle(["has","have","does",b])):f==="neg"?gp(S,NT[h],"got "+cn+".",shuffle(["hasn't","haven't","doesn't","don't",nb])):gp("",cap(h),m+" got "+cn+"?",shuffle(["Has","Have","Does","Do",cap(b)]));
 }
 // Short answers: "Yes, I do." "No, she isn't." "Yes, they were."
-function shortA(aux,s,yes){
-  const a=ansSub(s),w=a.en;
+function shortA(aux,s,yes,self){
+  const a=self?PS[s.agr]:ansSub(s),w=a.en;
   if(aux==="be"){const f=beF(a);return yes?`Yes, ${w} ${f}.`:f==="am"?"No, I'm not.":`No, ${w} ${NT[f]}.`}
   const v=aux==="do"?(A3(a)?"does":"do"):aux==="can"?"can":aux==="was"?wasF(a):(A3(a)?"has":"have");
   return yes?`Yes, ${w} ${v}.`:`No, ${w} ${NT[v]}.`;
@@ -248,7 +248,7 @@ function F(c){
     let gap=c.gap?c.gap(s,P,f2,o,x):null;
     if(!gap&&c.xGap&&x&&Math.random()<.3){const i=en.lastIndexOf(" "+x.en);gap=gp(en.slice(0,i),x.en,en.slice(-1),c.xs.map(z=>z.en))}
     if(!gap) gap=gapOf(c.aux,s,P,f2);
-    return{en,sk,gap,t3,alts:c.alt?c.alt(s,P,f2,o,x):[],ya:shortA(c.aux,s,true),na:shortA(c.aux,s,false),ans:f2==="q"?shortA(c.aux,s,yes):null};
+    return{en,sk,gap,t3,alts:c.alt?c.alt(s,P,f2,o,x):[],ya:shortA(c.aux,s,true,1),na:shortA(c.aux,s,false,1),ans:f2==="q"?shortA(c.aux,s,yes,1):null};
   };
   return T;
 }
@@ -422,7 +422,7 @@ const T_DIFF={name:"have got alebo have?",t3n:"Odpovedz",t3title:"Odpovedz krát
         chips.querySelectorAll(".chip").forEach(x=>x.setAttribute("aria-pressed",x.dataset.p===cp));
         const p=cp, n=p==="it"?BODY[0]:SCHOOL[1], f=p==="it"?FOOD[0]:FOOD[5], h=hv(p), d=dz(p);
         const rs=[["+",`${Sb(p)}${ap(p)} got ${n.en}.`,`${Sb(p)} ${h} ${n.en}.`],["−",`${Sb(p)} ${NT[h]} got ${n.en}.`,`${Sb(p)} ${NT[d]} have ${n.en}.`],
-          ["?",`${cap(h)} ${sb(p)} got ${n.en}?`,`${cap(d)} ${sb(p)} have ${n.en}?`],["Áno",short(p,1,"have"),short(p,1,"do")],["Nie",short(p,0,"have"),short(p,0,"do")],
+          ["?",`${cap(h)} ${sb(p)} got ${n.en}?`,`${cap(d)} ${sb(p)} have ${n.en}?`],["Áno",short(p,1,"have",1),short(p,1,"do",1)],["Nie",short(p,0,"have",1),short(p,0,"do",1)],
           ["jedlo",null,`${Sb(p)} ${h} ${f.en} for lunch.`]];
         tb.innerHTML="";
         tb.append($("table",{class:"cmp"},$("thead",{},$("tr",{},$("th",{},""),$("th",{},"have got"),$("th",{},"have"))),
@@ -446,7 +446,7 @@ const T_LIKE=F({name:"Do you like …?",aux:"do",t3:"short",subs:f=>f==="q"?SPQ:
 
 const WF_AND=WFT({name:"Joining sentences with and",task:"Spoj dve vety pomocou and",t3hint:"Spoj dve vety do jednej pomocou and.",
   make(){
-    const p=pick(P7.filter(x=>x!=="it")), like=coin(), pool=[...FOOD5,...FOOD], a=pick(pool), b=pick(pool.filter(x=>x!==a));
+    const p=pick(P7.filter(x=>x!=="it")), like=coin(), pool=[...FOOD5,...FOOD].filter(n=>!like||!/^an? /.test(n.en)), a=pick(pool), b=pick(pool.filter(x=>x!==a));
     const v=like?(s3(p)?"likes":"like"):hv(p), S=Sb(p), A=`${S} ${v} ${a.en}`;
     const en=`${A} and ${b.en}.`, q=`${A}. ${S} ${v} ${b.en}.`;
     const sk=like?`${PR[p].sk} ${PR[p].ma} ${RAD[GS[p]]} ${a.acc} a ${b.acc}.`:`${PR[p].sk} ${PR[p].ma} ${a.acc} a ${b.acc}.`;
@@ -562,7 +562,7 @@ const F_WEAR=F({name:"What are you wearing?",aux:"be",t3s:["wh","short"],subs:f=
     "Tvar: <b>am / is / are</b> + wear<b>ing</b>: She's wearing boots. They're wearing jeans.",
     "Zápor: I'm not wearing… She isn't wearing… Otázka: <b>Is</b> she wearing…? – Yes, she <b>is</b>."],
     tips:["Pri jednej veci <b>a</b>: a coat, a hoodie. Pri pároch bez a: boots, jeans, pyjamas, sandals."],
-    cols:COLS5,rows:rows(SP7,()=>({o:CLOTHES[1]}))},
+    cols:COLS5,rows:rows(SP7,()=>({o:CLOTHES[0]}))},
   voc:CLOTHES});
 
 const WF_LIST=WFT({name:"Lists with commas and and",task:"Napíš ako zoznam",t3hint:"Spoj tri vety do jedného zoznamu s čiarkou a and.",
@@ -739,7 +739,7 @@ const F_CANDO=F({name:"What can you do?",aux:"can",t3s:["wh","short"],subs:f=>f=
   pred:o=>({v:o.v,v3:o.v3}),sk:(s,f,o)=>skV(s,f,VIE,o.sk),wh:s=>`What can ${sM(s)} do?`,clue:(s,o)=>"vie: "+o.sk,
   rule:{text:["<b>What can you do?</b> = Čo vieš robiť? – I <b>can</b> hop. I <b>can't</b> skateboard.","Pre všetky osoby je can rovnaké: he can, she can, they can."],
     tips:["Po can je sloveso bez -s: She can <s>skips</s> <b>skip</b>."],
-    cols:COLS5,rows:rows(SP7,()=>({o:SKILLS[3]}))},
+    cols:COLS5,rows:rows(SP7,()=>({o:SKILLS[1]}))},
   voc:SKILLS});
 const F_LIKEING=F({name:"I like …ing",aux:"do",t3:"short",subs:f=>f==="q"?SPQ:SP7,objs:()=>SKILLS,extraWr:likeWr,
   pred:o=>({v:`like ${o.ing}`,v3:`likes ${o.ing}`}),sk:(s,f,o)=>skLike(s,f,o.nn),
@@ -1058,6 +1058,8 @@ function rule(T,next){
     };
     if(T.rule.cols.length>1) T.rule.cols.forEach(([h],i)=>chips.append($("button",{class:"chip",onclick:()=>{col=i;draw()}},h)));
     draw(); c.append($("p",{class:"hint"},"Ťukni na vetu a vypočuješ si ju."),chips,box);
+    if(T.rule.cols.some(x=>/ya|na|ans/.test(x[2]||""))&&T.rule.rows.some(r=>r.par.s&&/^(I|you)$/.test(r.par.s.agr)))
+      c.append(html("p","Stĺpce Áno / Nie ukazujú krátku odpoveď pre osobu v riadku. Pozor: na otázku s <b>you</b> odpovedáš s <b>I</b>: Do <b>you</b> like carrots? – Yes, <b>I</b> do. A na otázku s <b>I</b> s <b>you</b>: Do <b>I</b> …? – Yes, <b>you</b> do."));
   }
   if(T.rule.tips) c.append($("div",{class:"tip"},$("b",{},"Pozor!"),T.rule.tips.map(h=>html("p",h))));
   c.append(wordBox(T.voc,"Slovíčka v tejto téme"));
