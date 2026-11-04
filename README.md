@@ -47,6 +47,7 @@ Vyber **unity**, **spôsob** (všetko premiešané alebo jeden druh cvičenia) a
 ### Dobré vedieť
 
 - **Postup sa neukladá.** Po zatvorení aplikácia začína znova.
+- **Telefón, tablet aj počítač.** Na úzkej obrazovke je všetko pod sebou, na širokej (počítač, tablet naležato) je výber unitu a lekcie v stĺpci vľavo a cvičenie vpravo.
 - **Vety číta anglický hlas telefónu.** Ak nič nepočuť, skontroluj hlasitosť médií a či má telefón nainštalovaný anglický hlas (Nastavenia → Prevod textu na reč).
 - **Aktualizácie.** Aktuálna verzia je pod nadpisom. Keď aplikáciu otvoríš online a je zverejnená novšia verzia, objaví sa žltá lišta **Je dostupná nová verzia …** so zoznamom **Čo je nové**. **Aktualizovať** stiahne novú verziu a aplikáciu reštartuje, **Neskôr** lištu skryje do ďalšieho otvorenia.
 

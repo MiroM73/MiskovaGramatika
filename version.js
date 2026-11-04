@@ -7,6 +7,7 @@ self.CHANGELOG = [
     "Prvá verzia: gramatika z učebnice pre 3. ročník, Unit 1–10, rozdelená podľa lekcií (Lesson 1–5, Project and Review).",
     "Každá téma má 6 krokov: pravidlo, doplň, odpovedz, počúvaj, poskladaj vetu a napíš.",
     "Vety sa tvoria zo slovíčok z príslušného unitu a lekcie.",
-    "Lesson 4 a Project ponúkajú opakovanie celého unitu, karta Opakovanie mieša vybrané unity."
+    "Lesson 4 a Project ponúkajú opakovanie celého unitu, karta Opakovanie mieša vybrané unity.",
+    "Rozloženie pre telefón, tablet aj počítač: na širokej obrazovke je výber unitu a lekcie v stĺpci vedľa cvičenia."
   ]}
 ];

@@ -15,7 +15,7 @@
 <link rel="stylesheet" href="fonts.css">
 <script src="version.js"></script>
 <style>
-/* Layout: one centered column, a tab switch, a topic picker, a step rail, one exercise card at a time */
+/* Layout: a tab switch, a topic picker, a step rail, one exercise card at a time; one column on phones, picker beside the card on wide screens */
 :root{
   --bg:#f1eefb; --surface:#ffffff; --ink:#1f1b33; --muted:#5f5a78; --line:#dcd6ef;
   --accent:#6a4bd6; --accent-soft:#ece6fd; --sun:#f3ad00; --sun-soft:#fff3cf;
@@ -140,6 +140,21 @@ details .fs{margin-bottom:12px}
 .news b{font-family:var(--display);font-size:1.05rem}
 .news ul{margin:2px 0 0;padding-left:22px}
 .scene{font-family:var(--display);font-weight:800;font-size:1.25rem;text-align:center;white-space:pre-line;line-height:1.5;margin:0;padding:10px;border-radius:14px;background:var(--sun-soft);overflow-wrap:anywhere}
+/* Tablet and PC: more room around the column; from 1000px the topic picker becomes a sticky left sidebar */
+.stage{display:flex;flex-direction:column;gap:18px;min-width:0}
+#app{display:flex;flex-direction:column;gap:18px}
+@media (min-width:700px){
+  .wrap{padding-inline:24px;padding-block:32px 56px}
+  .card{padding:26px}
+}
+@media (min-width:1000px){
+  .wrap{max-width:1200px;display:grid;grid-template-columns:minmax(300px,360px) minmax(0,1fr);gap:20px 32px;align-items:start}
+  .wrap > header,.wrap > .upd,.wrap > .tabs{grid-column:1/-1}
+  #pick{position:sticky;top:calc(env(safe-area-inset-top,0px) + 16px);max-height:calc(100vh - 32px);overflow-y:auto;
+    background:var(--surface);border:2px solid var(--line);border-radius:20px;padding:16px}
+  #pick .chip{background:var(--bg)}
+  .wrap:has(> #pick[hidden]) .stage{grid-column:1/-1;max-width:900px;width:100%}
+}
 @media (prefers-reduced-motion:reduce){.bar i{transition:none}}
 </style>
 </head><body>
@@ -155,8 +170,10 @@ details .fs{margin-bottom:12px}
     <button class="tab" role="tab" id="t-rev" aria-selected="false">Opakovanie</button>
   </div>
   <div id="pick" class="fs"></div>
-  <div id="rail" class="rail"></div>
-  <main id="app"></main>
+  <div class="stage">
+    <div id="rail" class="rail"></div>
+    <main id="app"></main>
+  </div>
 </div>
 
 <script src="app.js"></script>
