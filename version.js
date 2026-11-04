@@ -8,6 +8,7 @@ self.CHANGELOG = [
     "Každá téma má 6 krokov: pravidlo, doplň, odpovedz, počúvaj, poskladaj vetu a napíš.",
     "Vety sa tvoria zo slovíčok z príslušného unitu a lekcie.",
     "Lesson 4 a Project ponúkajú opakovanie celého unitu, karta Opakovanie mieša vybrané unity.",
-    "Rozloženie pre telefón, tablet aj počítač: na širokej obrazovke je výber unitu a lekcie v stĺpci vedľa cvičenia."
+    "Rozloženie pre telefón, tablet aj počítač: na širokej obrazovke je výber unitu a lekcie v stĺpci vedľa cvičenia.",
+    "Zväčšenie a zmenšenie: na počítači Ctrl + koliesko myši (alebo Ctrl + a Ctrl −), na telefóne a tablete dvoma prstami. Tlačidlo vpravo dole vráti 100 %."
   ]}
 ];

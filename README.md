@@ -47,6 +47,7 @@ Vyber **unity**, **spôsob** (všetko premiešané alebo jeden druh cvičenia) a
 ### Dobré vedieť
 
 - **Postup sa neukladá.** Po zatvorení aplikácia začína znova.
+- **Zväčšenie a zmenšenie.** Na počítači **Ctrl + koliesko myši** (alebo **Ctrl +** a **Ctrl −**, **Ctrl 0** vráti 100 %), na telefóne a tablete roztiahni alebo stiahni **dva prsty**. Ide to od 50 % do 250 %, text sa vždy zalomí na šírku obrazovky. Veľkosť si aplikácia zapamätá; kým nie je 100 %, vpravo dole je tlačidlo s lupou, ktoré ju vráti späť.
 - **Telefón, tablet aj počítač.** Na úzkej obrazovke je všetko pod sebou, na širokej (počítač, tablet naležato) je výber unitu a lekcie v stĺpci vľavo a cvičenie vpravo.
 - **Vety číta anglický hlas telefónu.** Ak nič nepočuť, skontroluj hlasitosť médií a či má telefón nainštalovaný anglický hlas (Nastavenia → Prevod textu na reč).
 - **Aktualizácie.** Aktuálna verzia je pod nadpisom. Keď aplikáciu otvoríš online a je zverejnená novšia verzia, objaví sa žltá lišta **Je dostupná nová verzia …** so zoznamom **Čo je nové**. **Aktualizovať** stiahne novú verziu a aplikáciu reštartuje, **Neskôr** lištu skryje do ďalšieho otvorenia.

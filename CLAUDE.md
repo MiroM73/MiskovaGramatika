@@ -16,7 +16,7 @@ The app follows the textbook: **Unit 1–10**, each with **Lesson 1 Words (+ Fun
 
 | Path | What it is |
 |---|---|
-| `index.html` | Layout, CSS, the update check (copied from the sibling). Loads `version.js` then `app.js` |
+| `index.html` | Layout, CSS, the update check (copied from the sibling). Loads `version.js` then `app.js`. A head script does the app zoom (Ctrl+wheel, Ctrl +/−/0, two-finger pinch; CSS `zoom: var(--z)` on `.wrap`, 0.5–2.5, saved in localStorage `gramatika-zoom`, reset button `#zr`) and sets the width classes `w-xs` ≤460 / `w-s` ≤520 / `w-m` ≥700 / `w-l` ≥1000 on `<html>` from screen width ÷ zoom. Use these classes, not width media queries. `w-l` = picker as a sticky left sidebar beside `.stage` (rail + `#app`) |
 | `app.js` | Everything else: words, the sentence engine, topics, `UNITS`, the UI |
 | `version.js` | The app version, the single source (same scheme as the sibling) |
 | `sw.js` | Service worker, the sibling's with the cache named `gramatika-X.Y.Z` and `app.js` in `FILES` |
