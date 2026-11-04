@@ -9,6 +9,7 @@ self.CHANGELOG = [
     "Vety sa tvoria zo slovíčok z príslušného unitu a lekcie.",
     "Lesson 4 a Project ponúkajú opakovanie celého unitu, karta Opakovanie mieša vybrané unity.",
     "Rozloženie pre telefón, tablet aj počítač: na širokej obrazovke je výber unitu a lekcie v stĺpci vedľa cvičenia.",
+    "Dá sa nainštalovať na telefón, tablet aj počítač a po prvom otvorení funguje aj bez internetu.",
     "Zväčšenie a zmenšenie: na počítači Ctrl + koliesko myši (alebo Ctrl + a Ctrl −), na telefóne a tablete dvoma prstami. Tlačidlo vpravo dole vráti 100 %."
   ]}
 ];

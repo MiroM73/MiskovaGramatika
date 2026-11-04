@@ -4,7 +4,7 @@ A PWA for practising English grammar, made for Miško, a Slovak 3rd-grade pupil.
 
 Languages (the user's decision, same as the sibling): the app UI, the CHANGELOG in `version.js`, GitHub release notes and README.md are in **Slovak**. Code, code comments, commit messages and this CLAUDE.md stay in **English**.
 
-- Status: local repo only, branch `main`, **not published yet**. The user reviews the working version first; then it goes to GitHub (planned like the sibling: a public repo under MiroM73 + GitHub Pages from `main`). Push only when the user asks.
+- Repo: https://github.com/MiroM73/MiskovaGramatika (public), branch `main`, GitHub Pages from `main`: https://mirom73.github.io/MiskovaGramatika/. Push only when the user asks.
 - No build step, no dependencies, no tests in the repo. Plain static files.
 - `scans/` holds the two scanned pages of the textbook's table of contents (ScanImage001 = Starter + Lessons 1–3 of Units 1–10, ScanImage002 = Lesson 4 Story, Lesson 5 Skills and Culture, Project and Review). It is in `.gitignore`, never committed. The PNGs are ~20 MB; downscale with Pillow (`pip install --target <scratchpad>`) before viewing.
 
@@ -20,7 +20,7 @@ The app follows the textbook: **Unit 1–10**, each with **Lesson 1 Words (+ Fun
 | `app.js` | Everything else: words, the sentence engine, topics, `UNITS`, the UI |
 | `version.js` | The app version, the single source (same scheme as the sibling) |
 | `sw.js` | Service worker, the sibling's with the cache named `gramatika-X.Y.Z` and `app.js` in `FILES` |
-| `manifest.webmanifest` | PWA manifest. Purple theme (`#6a4bd6`) so the icon differs from the blue Slovíčka icon |
+| `manifest.webmanifest` | PWA manifest. Purple theme (`#6a4bd6`) so the icon differs from the blue Slovíčka icon. No `orientation` lock, so tablets can use the wide layout in landscape |
 | `fonts.css`, `fonts/`, `icons/` | Fonts copied from the sibling; purple "+ − ?" icons generated with Pillow |
 
 ## app.js, top to bottom
@@ -38,7 +38,7 @@ Grammar decisions to keep: with plain *have* the negative is **don't/doesn't hav
 
 ## Versioning and releasing
 
-Same as the sibling: bump `APP_VERSION` and add a Slovak CHANGELOG entry in `version.js`, commit, annotated tag `vX.Y.Z`, push with `--follow-tags`, `gh release create`. Current version: **1.0.0** (unreleased).
+Same as the sibling: bump `APP_VERSION` and add a Slovak CHANGELOG entry in `version.js`, commit, annotated tag `vX.Y.Z`, push with `--follow-tags`, `gh release create`. Current version: **1.0.0** (released 2026-11-04).
 
 ## Testing (Windows, Git Bash)
 

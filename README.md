@@ -2,7 +2,9 @@
 
 Malá aplikácia na precvičovanie anglickej gramatiky pre žiaka 3. ročníka. Je usporiadaná presne podľa obsahu učebnice: **Unit 1–10**, v každom **Lesson 1–5** a **Project and Review**. Vety tvorí zo slovíčok príslušného unitu a lekcie, ktoré Miško pozná z aplikácie [Miškove slovíčka](https://github.com/MiroM73/MiskoveSlovicka).
 
-Je to webová aplikácia (PWA): beží v prehliadači, dá sa nainštalovať na plochu telefónu ako bežná aplikácia a po prvom otvorení funguje aj bez internetu. Nemá účty, reklamy ani sledovanie.
+**Aplikácia: https://mirom73.github.io/MiskovaGramatika/**
+
+Je to webová aplikácia (PWA): beží v prehliadači, dá sa nainštalovať na plochu telefónu, tabletu aj počítača ako bežná aplikácia a po prvom otvorení funguje aj bez internetu. Nemá účty, reklamy ani sledovanie.
 
 ## Obsah
 
@@ -56,7 +58,7 @@ Vyber **unity**, **spôsob** (všetko premiešané alebo jeden druh cvičenia) a
 
 ### Android (Chrome)
 
-1. Otvor adresu aplikácie v **Chrome**.
+1. Otvor https://mirom73.github.io/MiskovaGramatika/ v **Chrome**.
 2. Ťukni na ponuku **⋮**, potom na **Pridať na plochu** a **Inštalovať**.
 3. Na ploche sa objaví fialová ikona **Gramatika**. Aplikáciu raz otvor s internetom, potom už funguje aj bez neho.
 
@@ -64,10 +66,11 @@ Vyber **unity**, **spôsob** (všetko premiešané alebo jeden druh cvičenia) a
 
 1. Otvor odkaz v **Safari**.
 2. Ťukni na **Zdieľať** (štvorček so šípkou), potom na **Pridať na plochu** a **Pridať**.
+3. Aplikáciu raz otvor s internetom, potom už funguje aj bez neho.
 
 ### Počítač (Chrome alebo Edge)
 
-Otvor odkaz a klikni na ikonu **Inštalovať** na pravom konci panela s adresou.
+Otvor odkaz a klikni na ikonu **Inštalovať** na pravom konci panela s adresou. Aplikácia sa otvorí vo vlastnom okne a funguje aj bez internetu.
 
 ## Štruktúra projektu
 
