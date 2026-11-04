@@ -1,0 +1,719 @@
+<!doctype html>
+<html lang="sk"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Miškova gramatika</title>
+<meta name="description" content="Anglická gramatika pre 3. ročník">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#f1eefb" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#13111e" media="(prefers-color-scheme: dark)">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Gramatika">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="stylesheet" href="fonts.css">
+<script src="version.js"></script>
+<style>
+/* Layout: one centered column, a tab switch, a topic picker, a step rail, one exercise card at a time */
+:root{
+  --bg:#f1eefb; --surface:#ffffff; --ink:#1f1b33; --muted:#5f5a78; --line:#dcd6ef;
+  --accent:#6a4bd6; --accent-soft:#ece6fd; --sun:#f3ad00; --sun-soft:#fff3cf;
+  --ok:#17905a; --ok-soft:#ddf4e8; --bad:#cf3b3b; --bad-soft:#fbe4e4;
+  --display:"Baloo 2","Trebuchet MS",system-ui,sans-serif;
+  --body:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:light;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#13111e; --surface:#1d1a2b; --ink:#ece9f8; --muted:#a39dbc; --line:#2f2a45;
+  --accent:#a58cff; --accent-soft:#2a2347; --sun:#f2c14e; --sun-soft:#3a3016;
+  --ok:#40c785; --ok-soft:#173527; --bad:#ff7070; --bad-soft:#3d1d1f; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#13111e; --surface:#1d1a2b; --ink:#ece9f8; --muted:#a39dbc; --line:#2f2a45;
+  --accent:#a58cff; --accent-soft:#2a2347; --sun:#f2c14e; --sun-soft:#3a3016;
+  --ok:#40c785; --ok-soft:#173527; --bad:#ff7070; --bad-soft:#3d1d1f; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5}
+.wrap{max-width:760px;margin:0 auto;padding-inline:16px;padding-block:24px 48px;display:flex;flex-direction:column;gap:18px}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(1.8rem,5vw,2.4rem);line-height:1.1;margin:0;text-wrap:balance}
+.sub{color:var(--muted);margin:4px 0 0}
+.tabs{display:flex;gap:8px;flex-wrap:wrap}
+button{font:inherit;cursor:pointer;color:inherit}
+button:focus-visible,input:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+.tab{border:2px solid var(--line);background:var(--surface);border-radius:999px;padding:8px 16px;font-weight:800}
+.tab[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.rail{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+.st{border:2px solid var(--line);background:var(--surface);border-radius:12px;padding:6px 4px;text-align:center;font-size:.78rem;font-weight:700;color:var(--muted);min-width:0}
+.st b{display:block;font-family:var(--display);font-size:1.15rem;line-height:1.1;color:var(--ink)}
+.st.on{border-color:var(--accent);background:var(--accent-soft);color:var(--ink)}
+.st.done{border-color:var(--ok);background:var(--ok-soft)}
+@media (max-width:520px){.rail{grid-template-columns:repeat(3,1fr)}}
+.card{background:var(--surface);border:2px solid var(--line);border-radius:20px;padding:22px;display:flex;flex-direction:column;gap:16px}
+.card h2{font-family:var(--display);font-size:1.4rem;margin:0;line-height:1.2}
+.card > p{margin:0}
+.hint{color:var(--muted);margin:0}
+.src{color:var(--accent);font-weight:800;font-size:.9rem;margin:-10px 0 0}
+.bar{height:8px;background:var(--line);border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--sun);transition:width .3s}
+.meta{display:flex;justify-content:space-between;color:var(--muted);font-weight:700;font-size:.9rem;font-variant-numeric:tabular-nums}
+.sent{font-family:var(--display);font-weight:800;font-size:clamp(1.35rem,4.8vw,1.85rem);text-align:center;line-height:1.3;padding:6px 0;overflow-wrap:anywhere;margin:0}
+.sent.sk{font-size:clamp(1.2rem,4.2vw,1.6rem)}
+.gap{display:inline-block;min-width:3em;border-bottom:3px solid var(--accent);color:var(--accent);padding:0 .15em}
+.gap.ok{color:var(--ok);border-color:var(--ok)}
+.gap.bad{color:var(--bad);border-color:var(--bad)}
+.skl{text-align:center;color:var(--muted);font-weight:700;margin:-8px 0 0}
+.lbl{display:block;text-align:center;font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:800}
+.clue{align-self:center;border-radius:999px;padding:4px 16px;font-weight:800;font-size:1.05rem}
+.clue.y{background:var(--ok-soft);color:var(--ok)}
+.clue.n{background:var(--bad-soft);color:var(--bad)}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.opts.one{grid-template-columns:1fr}
+@media (max-width:460px){.opts{grid-template-columns:1fr}}
+.opt{border:2px solid var(--line);background:var(--bg);border-radius:14px;padding:12px;font-weight:700;font-size:1.05rem;min-height:52px}
+.opts.one .opt{text-align:left;padding-inline:16px}
+.opt:hover:not(:disabled){border-color:var(--accent)}
+.opt.ok{border-color:var(--ok);background:var(--ok-soft)}
+.opt.bad{border-color:var(--bad);background:var(--bad-soft)}
+.row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.btn{border:none;border-radius:14px;padding:12px 20px;font-weight:800;background:var(--accent);color:#fff}
+.btn.ghost{background:var(--accent-soft);color:var(--ink)}
+.btn.sun{background:var(--sun);color:#1f1b33}
+.btn:disabled{opacity:.5}
+.fb{border-radius:14px;padding:12px 14px;font-weight:700;text-align:center}
+.fb.ok{background:var(--ok-soft);color:var(--ok)}
+.fb.bad{background:var(--bad-soft);color:var(--bad)}
+.fb.note{background:var(--sun-soft);color:var(--ink)}
+.fb span{color:var(--ink)}
+.fb small{display:block;color:var(--muted);font-weight:700}
+.speak{border:3px solid var(--accent);background:var(--accent-soft);border-radius:999px;padding:14px 26px 14px 20px;margin:0 auto;display:flex;align-items:center;gap:12px;font-family:var(--display);font-weight:800;font-size:1.3rem;color:var(--ink)}
+.speak:hover{background:var(--accent);color:#fff}
+.speak:hover svg{fill:#fff}
+.speak svg{width:44px;height:44px;fill:var(--accent);flex:none}
+.btn svg{width:20px;height:20px;fill:currentColor;vertical-align:-4px;margin-right:6px}
+.line{min-height:58px;border-bottom:3px solid var(--accent);display:flex;flex-wrap:wrap;gap:6px;justify-content:center;align-items:center;padding:6px 0}
+.line .end{font-family:var(--display);font-weight:800;font-size:1.3rem}
+.pool{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.wt{border:2px solid var(--line);background:var(--bg);border-radius:12px;padding:8px 12px;font-weight:800;font-size:1.1rem;min-height:46px}
+.line .wt{background:var(--accent-soft);border-color:var(--accent)}
+.wt:disabled{opacity:.25}
+input[type=text]{font:inherit;font-size:1.2rem;font-weight:700;width:100%;padding:12px 14px;border-radius:14px;border:2px solid var(--line);background:var(--bg);color:var(--ink);text-align:center}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:2px solid var(--line);background:var(--bg);border-radius:999px;padding:6px 12px;font-weight:700;font-size:.92rem}
+.chip[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
+.fs{display:flex;flex-direction:column;gap:8px}
+.fs h3{margin:0;font-size:.82rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.big{font-family:var(--display);font-size:3rem;font-weight:800;text-align:center;line-height:1;font-variant-numeric:tabular-nums}
+.list{display:flex;flex-direction:column;gap:6px}
+.list span{background:var(--bad-soft);border-radius:8px;padding:4px 10px;font-weight:700;font-size:.95rem}
+.words{display:grid;grid-template-columns:1fr 1fr;gap:4px 16px;margin:0}
+.words div{display:flex;justify-content:space-between;gap:8px;border-bottom:1px dashed var(--line);padding:4px 0;font-size:.95rem}
+.words div b{font-weight:800}
+.words div span{color:var(--muted);text-align:right}
+@media (max-width:520px){.words{grid-template-columns:1fr}}
+.rt{display:flex;flex-direction:column;gap:6px}
+.rr{display:grid;grid-template-columns:3.6em 1fr;gap:10px;align-items:center;border:2px solid var(--line);border-radius:12px;padding:8px 12px;background:var(--bg);text-align:left;width:100%}
+.rr:hover{border-color:var(--accent)}
+.rr > b{font-family:var(--display);font-size:1.1rem;color:var(--accent)}
+.rr .e{display:block;font-weight:800;font-size:1.05rem}
+.rr .s{display:block;color:var(--muted);font-size:.9rem}
+.tw{overflow-x:auto}
+.cmp{width:100%;border-collapse:separate;border-spacing:0 6px}
+.cmp th{font-family:var(--display);color:var(--accent);text-align:left;padding:2px 8px;font-size:1rem}
+.cmp thead th{color:var(--muted);font-family:var(--body);font-size:.8rem;letter-spacing:.08em;text-transform:uppercase}
+.cmp td{padding:0 4px;vertical-align:top}
+.say{border:2px solid var(--line);background:var(--bg);border-radius:10px;padding:6px 10px;font-weight:800;text-align:left;width:100%}
+.say:hover{border-color:var(--accent)}
+.no{display:block;color:var(--bad);font-weight:700;font-size:.9rem;padding:6px 10px}
+.tip{background:var(--sun-soft);border-left:5px solid var(--sun);border-radius:10px;padding:10px 14px}
+.tip p{margin:4px 0}
+.tip s,.card s{color:var(--bad)}
+details summary{cursor:pointer;font-weight:800;color:var(--accent)}
+details[open] summary{margin-bottom:10px}
+details .fs{margin-bottom:12px}
+.upd{background:var(--sun-soft);border:2px solid var(--sun);border-radius:16px;padding:12px 14px;display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px}
+.upd p{margin:0;flex:1 1 220px;font-weight:700}
+.upd .row{justify-content:flex-start}
+.news{flex:1 1 100%;display:flex;flex-direction:column;gap:6px}
+.news h3{margin:0;font-size:.82rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.news b{font-family:var(--display);font-size:1.05rem}
+.news ul{margin:2px 0 0;padding-left:22px}
+@media (prefers-reduced-motion:reduce){.bar i{transition:none}}
+</style>
+</head><body>
+
+<div class="wrap">
+  <header>
+    <h1>Miškova gramatika</h1>
+    <p class="sub">3. ročník: Unit 1 a 2 · have got, have, like, I'd like · <span id="ver"></span></p>
+  </header>
+  <div id="upd" class="upd" role="status" hidden></div>
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" id="t-learn" aria-selected="true">Témy</button>
+    <button class="tab" role="tab" id="t-rev" aria-selected="false">Opakovanie</button>
+  </div>
+  <div id="pick" class="fs"></div>
+  <div id="rail" class="rail"></div>
+  <main id="app"></main>
+</div>
+
+<script>
+const $=(t,a={},...k)=>{const e=document.createElement(t);for(const x in a){if(x==="class")e.className=a[x];else if(x.startsWith("on"))e.addEventListener(x.slice(2),a[x]);else e.setAttribute(x,a[x]);}k.flat().forEach(c=>c!=null&&e.append(c));return e};
+const html=(t,h)=>{const e=document.createElement(t);e.innerHTML=h;return e};
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const pick=a=>a[Math.random()*a.length|0];
+const coin=()=>Math.random()<.5;
+const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
+const norm=s=>s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[\u2018\u2019`\u00b4]/g,"'").replace(/\s+/g," ").trim();
+
+// ---------- Words (from Miškove slovíčka: 3rd grade Units 1–3 and 2nd grade) ----------
+// "english|slovak nominative|slovak accusative (if different)|gender for Slovak possessives (m, ma = animate m, f, n, p = plural)"
+// An English noun with "a"/"an" is countable singular; without it, it is plural or uncountable (gets "any" in negatives and questions).
+const NN=(u,s)=>s.split(";").map(x=>{const[en,sk,acc,g]=x.split("|");return{en,sk,acc:acc||sk,g:g||"m",u}});
+const SCHOOL=NN("3. ročník · Unit 1 · Lesson 1","a dictionary|slovník;a folder|zakladač;a glue stick|lepidlo||n;a lunch box|krabička na desiatu|krabičku na desiatu|f;a pencil case|peračník;a pencil sharpener|strúhadlo||n;scissors|nožnice||p;a water bottle|fľaša na vodu|fľašu na vodu|f");
+const SPORT=NN("3. ročník · Unit 1 · Lesson 3","football boots|kopačky||p;a football shirt|futbalový dres;shorts|šortky||p;a sports bag|športová taška|športovú tašku|f;a tracksuit|tepláková súprava|teplákovú súpravu|f;trainers|tenisky||p");
+const ART=NN("3. ročník · Unit 1 · Lesson 5","crayons|pastelky||p;paintbrushes|štetce||p;paints|farby||p");
+const SCHOOL2=NN("2. ročník · Unit 2","a bag|taška|tašku|f;a book|kniha|knihu|f;a pen|pero||n;a pencil|ceruzka|ceruzku|f;a rubber|guma|gumu|f;a ruler|pravítko||n");
+const TOYS=NN("2. ročník · Unit 2 · hračky","a ball|lopta|loptu|f;a kite|šarkan|šarkana|ma;a robot|robot|robota|ma;a teddy|medvedík|medvedíka|ma;a scooter|kolobežka|kolobežku|f;a skateboard|skejtbord;a board game|stolová hra|stolovú hru|f;a skipping rope|švihadlo||n");
+const PETS=NN("2. ročník · Unit 4–6 · zvieratká a rodina","a dog|pes|psa|ma;a cat|mačka|mačku|f;a hamster|škrečok|škrečka|ma;a rabbit|králik|králika|ma;a brother|brat|brata|ma;a sister|sestra|sestru|f");
+const BODY=NN("2. ročník · Unit 5 · telo zvieratka (it)","a tail|chvost;wings|krídla||p;a beak|zobák;big ears|veľké uši||p;long legs|dlhé nohy||p");
+const FOOD=NN("3. ročník · Unit 2 · Lesson 1","biscuits|keksy||p;cereal|cereálie||p;chicken|kuracina|kuracinu|f;chips|hranolky||p;meatballs|mäsové guľky||p;rice|ryža|ryžu|f;sandwiches|sendviče||p;yoghurt|jogurt");
+const VEG=NN("3. ročník · Unit 2 · Lesson 3","beans|fazuľky||p;carrots|mrkvy|mrkvu|f;cucumbers|uhorky||p;peas|hrášok;peppers|papriky||p;potatoes|zemiaky||p");
+const FOOD5=NN("3. ročník · Unit 2 · Lesson 5","cake|koláč;pasta|cestoviny||p;vegetables|zelenina|zeleninu|f");
+const FOOD2=NN("2. ročník · Unit 8","bread|chlieb;cheese|syr;eggs|vajíčka||p;pizza|pizza|pizzu|f;soup|polievka|polievku|f;salad|šalát;noodles|rezance||p;bananas|banány||p;strawberries|jahody||p;ice cream|zmrzlina|zmrzlinu|f");
+const AFOOD=NN("3. ročník · Unit 3 · Lesson 3 · čo jedia zvieratá (it)","grass|tráva|trávu|f;insects|hmyz;leaves|listy||p;meat|mäso||n;nuts|orechy||p;seeds|semená||p");
+BODY.forEach(n=>n.noAny=1); // "It hasn't got long legs." sounds better without "any"
+const MEALS=[{en:"breakfast",sk:"na raňajky",w:"raňajky"},{en:"lunch",sk:"na obed",w:"obed"},{en:"dinner",sk:"na večeru",w:"večera"}];
+const THINGS=[...SCHOOL,...SPORT,...ART,...SCHOOL2,...TOYS], HAVE_ALL=[...THINGS,...PETS], FOODS=[...FOOD,...VEG,...FOOD5,...FOOD2];
+const ITTOYS=TOYS.filter(n=>/ball|teddy/.test(n.en));
+const W=(a,en)=>a.find(x=>x.en===en);
+const RULER=W(SCHOOL2,"a ruler"), TAIL=W(BODY,"a tail"), DOG=W(PETS,"a dog"), PCASE=W(SCHOOL,"a pencil case"), SBAG=W(SPORT,"a sports bag"), BALL=W(TOYS,"a ball");
+const CEREAL=W(FOOD,"cereal"), RICE=W(FOOD,"rice"), CARROTS=W(VEG,"carrots"), PASTA=W(FOOD5,"pasta"), NUTS=W(AFOOD,"nuts"), MEAT=W(AFOOD,"meat"), SEEDS=W(AFOOD,"seeds");
+const things=p=>p==="it"?BODY:HAVE_ALL, foods=p=>p==="it"?AFOOD:FOODS;
+
+// ---------- Pronouns and grammar helpers ----------
+const PR={
+  I:   {en:"I",   sk:"Ja",  ma:"mám",  rad:"rád", would:"by som chcel",  can:"Môžem",  poss:"my",   s3:0},
+  you: {en:"you", sk:"Ty",  ma:"máš",  rad:"rád", would:"by si chcel",   can:"Môžeš",  poss:"your", s3:0},
+  he:  {en:"he",  sk:"On",  ma:"má",   rad:"rád", would:"by chcel",      can:"Môže",   poss:"his",  s3:1},
+  she: {en:"she", sk:"Ona", ma:"má",   rad:"rada",would:"by chcela",     can:"Môže",   poss:"her",  s3:1},
+  it:  {en:"it",  sk:"Ono", ma:"má",   rad:"rado",would:"by chcelo",     can:"Môže",   poss:"its",  s3:1},
+  we:  {en:"we",  sk:"My",  ma:"máme", rad:"radi",would:"by sme chceli", can:"Môžeme", poss:"our",  s3:0},
+  they:{en:"they",sk:"Oni", ma:"majú", rad:"radi",would:"by chceli",     can:"Môžu",   poss:"their",s3:0}};
+const P7=Object.keys(PR), PQ=P7.filter(p=>p!=="I");
+const NT={has:"hasn't",have:"haven't",does:"doesn't",do:"don't",is:"isn't",are:"aren't",am:"am not",can:"can't"};
+const s3=p=>PR[p].s3, sb=p=>PR[p].en, Sb=p=>cap(PR[p].en);
+const hv=p=>s3(p)?"has":"have", dz=p=>s3(p)?"does":"do", be=p=>p==="I"?"am":s3(p)?"is":"are", ap=p=>s3(p)?"'s":"'ve";
+const swapH=v=>v==="has"?"have":"has", swapD=v=>v==="does"?"do":"does";
+// Who answers a question: "Have you…?" – "Yes, I have." and "Have I…?" – "Yes, you have."
+const ansP=p=>p==="you"?"I":p==="I"?"you":p;
+const short=(p,yes,aux)=>{const a=ansP(p),v=aux==="have"?hv(a):aux==="do"?dz(a):aux;return (yes?"Yes, ":"No, ")+sb(a)+" "+(yes?v:NT[v])+"."};
+const badAgree=(p,yes,aux)=>{const a=ansP(p),v=aux==="have"?swapH(hv(a)):swapD(dz(a));return (yes?"Yes, ":"No, ")+sb(a)+" "+(yes?v:NT[v])+"."};
+const anyN=n=>/^an? /.test(n.en)||n.noAny?n.en:"any "+n.en, bare=n=>n.en.replace(/^an? /,"");
+const skQ=(p,v,rest)=>cap(v)+(p==="you"?"":" "+PR[p].sk.toLowerCase())+" "+rest+"?";
+const TVOJ={m:"tvoj",ma:"tvojho",f:"tvoju",n:"tvoje",p:"tvoje"}, SVOJ={m:"svoj",ma:"svojho",f:"svoju",n:"svoje",p:"svoje"};
+// Gap item: the sentence with ___, the right word and up to three wrong ones (first three of `wr`)
+const gp=(pre,a,post,wr)=>({txt:(pre?pre+" ":"")+"___"+(post?(/^[.?!]/.test(post)?"":" ")+post:""),a,opts:shuffle([a,...[...new Set(wr)].filter(w=>w!==a).slice(0,3)])});
+const opts4=(a,wr)=>shuffle([a,...[...new Set(wr)].filter(w=>w!==a).slice(0,3)]);
+// Short-answer task: a question, a ✔/✘ clue and four short answers
+const qa=(q,sk,p,aux,yes,wr)=>{const a=short(p,yes,aux);return{task:"Odpovedz krátko",q,hint:sk,clue:yes,a,opts:opts4(a,wr),say:q+" "+a}};
+
+// ---------- Topics ----------
+// Each topic: rnd() makes random parameters, gen(par) builds the sentence (en, sk), its gap task, its 3rd-step task (t3)
+// and, for questions, the short answers ya/na. pList/nPool tell which pronouns and nouns fit, for listening distractors.
+const T_GOT={name:"I've got / He's got",src:"Unit 1 · Lesson 2 · Grammar (have got)",t3n:"Zmeň",t3title:"Zmeň vetu",
+  t3hint:"Zmeň kladnú vetu (+) na zápornú (−) alebo zápornú na kladnú.",
+  pList:()=>P7, nPool:q=>things(q.p),
+  rnd(){const p=pick(P7);return{p,n:pick(things(p)),neg:coin()}},
+  gen({p,n,neg}){
+    const pos=`${Sb(p)}${ap(p)} got ${n.en}.`, ng=`${Sb(p)} ${NT[hv(p)]} got ${anyN(n)}.`, en=neg?ng:pos;
+    const sk=`${PR[p].sk} ${neg?"ne":""}${PR[p].ma} ${n.acc}.`;
+    const gap=neg?gp(Sb(p),NT[hv(p)],`got ${anyN(n)}.`,shuffle(["hasn't","haven't","doesn't","don't",NT[be(p)]]))
+                 :gp(Sb(p),hv(p),`got ${n.en}.`,shuffle(["has","have","does",be(p)]));
+    const t3=neg?{task:"Zmeň na kladnú vetu (+)",q:en,a:`${Sb(p)} ${hv(p)} got ${n.en}.`,wr:[`${Sb(p)} ${swapH(hv(p))} got ${n.en}.`,`${Sb(p)} ${be(p)} got ${n.en}.`,`${Sb(p)} ${dz(p)} got ${n.en}.`]}
+                :{task:"Zmeň na zápornú vetu (−)",q:en,a:ng,wr:[`${Sb(p)} ${NT[swapH(hv(p))]} got ${anyN(n)}.`,`${Sb(p)} ${NT[dz(p)]} got ${anyN(n)}.`,`${Sb(p)} ${NT[be(p)]} got ${anyN(n)}.`]};
+    t3.opts=opts4(t3.a,t3.wr);
+    return{en,sk,alts:[neg?`${Sb(p)} ${NT[dz(p)]} have ${anyN(n)}.`:`${Sb(p)} ${hv(p)} ${n.en}.`],gap,t3};
+  },
+  rule:{text:["<b>have got</b> znamená <b>mať</b> (niečo vlastniť). Pri <b>he, she, it</b> sa mení na <b>has got</b>.",
+    "Skrátene: <b>I've got, you've got, he's got, she's got, it's got, we've got, they've got</b>.",
+    "Zápor: <b>haven't got</b> (I, you, we, they) a <b>hasn't got</b> (he, she, it)."],
+    tips:["<b>he's got</b> = he <b>has</b> got (nie he is).","V zápore pri množnom čísle pridávame <b>any</b>: I haven't got <b>any</b> crayons."],
+    cols:[["+ kladná veta",{neg:false}],["− záporná veta",{neg:true}]],
+    rows:P7.map(p=>({l:sb(p),par:{p,n:p==="it"?TAIL:RULER,neg:false}}))},
+  voc:[...THINGS,...PETS,...BODY]};
+
+const T_HAVE={name:"I have / He has",src:"Unit 2 · Lesson 2 · Grammar (have)",t3n:"Zmeň",t3title:"Zmeň vetu",
+  t3hint:"Zmeň kladnú vetu (+) na zápornú (−) alebo zápornú na kladnú.",
+  pList:()=>P7, nPool:q=>things(q.p),
+  rnd(){const p=pick(P7);return{p,n:pick(things(p)),neg:coin()}},
+  gen({p,n,neg}){
+    const pos=`${Sb(p)} ${hv(p)} ${n.en}.`, ng=`${Sb(p)} ${NT[dz(p)]} have ${anyN(n)}.`, en=neg?ng:pos;
+    const sk=`${PR[p].sk} ${neg?"ne":""}${PR[p].ma} ${n.acc}.`;
+    const gap=neg?gp(Sb(p),NT[dz(p)],`have ${anyN(n)}.`,shuffle(["doesn't","don't","hasn't","haven't",NT[be(p)]]))
+                 :gp(Sb(p),hv(p),`${n.en}.`,shuffle(["has","have","haves",be(p)]));
+    const t3=neg?{task:"Zmeň na kladnú vetu (+)",q:en,a:pos,wr:[`${Sb(p)} ${swapH(hv(p))} ${n.en}.`,`${Sb(p)} haves ${n.en}.`,`${Sb(p)} ${be(p)} have ${n.en}.`]}
+                :{task:"Zmeň na zápornú vetu (−)",q:en,a:ng,wr:[`${Sb(p)} ${NT[dz(p)]} has ${anyN(n)}.`,`${Sb(p)} ${NT[swapD(dz(p))]} have ${anyN(n)}.`,`${Sb(p)} ${NT[hv(p)]} have ${anyN(n)}.`]};
+    t3.opts=opts4(t3.a,t3.wr);
+    return{en,sk,alts:[neg?`${Sb(p)} ${NT[hv(p)]} got ${anyN(n)}.`:`${Sb(p)}${ap(p)} got ${n.en}.`],gap,t3};
+  },
+  rule:{text:["Aj samotné <b>have</b> znamená <b>mať</b>. Pri <b>he, she, it</b> je <b>has</b>: She has a ruler.",
+    "Zápor sa robí pomocou <b>don't</b> (I, you, we, they) a <b>doesn't</b> (he, she, it): I <b>don't have</b> a ruler. She <b>doesn't have</b> a ruler."],
+    tips:["Po <b>doesn't</b> je vždy <b>have</b>, nikdy has: She doesn't <s>has</s> <b>have</b> a pen.",
+      "Nehovoríme <s>I haven't a ruler.</s> Správne je <b>I don't have a ruler.</b> alebo <b>I haven't got a ruler.</b>"],
+    cols:[["+ kladná veta",{neg:false}],["− záporná veta",{neg:true}]],
+    rows:P7.map(p=>({l:sb(p),par:{p,n:p==="it"?TAIL:RULER,neg:false}}))},
+  voc:[...THINGS,...PETS,...BODY]};
+
+const T_DIFF={name:"have got alebo have?",src:"Unit 1 a Unit 2 · Lesson 2 · Grammar",t3n:"Odpovedz",t3title:"Odpovedz krátko",
+  t3hint:"Pozri sa, či je otázka s got alebo s do/does, a vyber krátku odpoveď podľa ✔ Áno / ✘ Nie.",
+  pList:q=>q.k[0]==="q"?PQ:P7, nPool:q=>things(q.p),
+  rnd(){const k=pick(["qg","qd","ng","nd","meal"]), p=k[0]==="q"?pick(PQ):pick(P7);
+    return k==="meal"?{k,p,f:pick(foods(p)),m:pick(MEALS),yes:coin()}:{k,p,n:pick(things(p)),yes:coin()}},
+  gen({k,p,n,f,m,yes}){
+    const p2=p==="I"?"you":p;
+    if(k==="meal"){
+      const h=hv(p), en=`${Sb(p)} ${h} ${f.en} for ${m.en}.`, sk=`${PR[p].sk} ${PR[p].ma} ${m.sk} ${f.acc}.`;
+      const q2=`${cap(dz(p2))} ${sb(p2)} have ${f.en} for ${m.en}?`;
+      return{en,sk,gap:gp(Sb(p),h,`${f.en} for ${m.en}.`,[h+" got",swapH(h),swapH(h)+" got"]),
+        t3:qa(q2,skQ(p2,PR[p2].ma,`${m.sk} ${f.acc}`),p2,"do",yes,[short(p2,!yes,"do"),short(p2,yes,"have"),short(p2,!yes,"have")])};
+    }
+    const got=k==="qg"||k==="ng", q=k[0]==="q";
+    const F={qg:`${cap(hv(p))} ${sb(p)} got ${anyN(n)}?`,qd:`${cap(dz(p))} ${sb(p)} have ${anyN(n)}?`,ng:`${Sb(p)} ${NT[hv(p)]} got ${anyN(n)}.`,nd:`${Sb(p)} ${NT[dz(p)]} have ${anyN(n)}.`};
+    const en=F[k], sk=q?skQ(p,PR[p].ma,n.acc):`${PR[p].sk} ne${PR[p].ma} ${n.acc}.`;
+    const gap=q?gp("",cap(got?hv(p):dz(p)),`${sb(p)} ${got?"got":"have"} ${anyN(n)}?`,shuffle(["Has","Have","Does","Do"]))
+               :gp(Sb(p),got?NT[hv(p)]:NT[dz(p)],`${got?"got":"have"} ${anyN(n)}.`,shuffle(["hasn't","haven't","doesn't","don't"]));
+    const aux=got?"have":"do", oth=got?"do":"have";
+    const qq=q?en:got?`${cap(hv(p2))} ${sb(p2)} got ${anyN(n)}?`:`${cap(dz(p2))} ${sb(p2)} have ${anyN(n)}?`;
+    return{en,sk,alts:[F[{qg:"qd",qd:"qg",ng:"nd",nd:"ng"}[k]]],gap,
+      t3:qa(qq,skQ(p2,PR[p2].ma,n.acc),p2,aux,yes,[short(p2,!yes,aux),short(p2,yes,oth),short(p2,!yes,oth)])};
+  },
+  rule:{text:["<b>have got</b> aj <b>have</b> znamenajú <b>mať</b>. Líšia sa v zápore, v otázke a v krátkej odpovedi.",
+    "<b>have got</b> si vystačí samo: <b>Has</b> she got a dog? – Yes, she <b>has</b>.",
+    "<b>have</b> potrebuje pomocníka <b>do / does</b>: <b>Does</b> she have a dog? – Yes, she <b>does</b>."],
+    tips:["Pri jedle (raňajky, obed, večera) používame iba <b>have</b>: I have cereal for breakfast. <s>I've got cereal for breakfast.</s>",
+      "Na otázku s <b>got</b> odpovedáš s <b>have / has</b>, na otázku s <b>do / does</b> odpovedáš s <b>do / does</b>."],
+    custom(){
+      const wrap=$("div",{class:"fs"}), chips=$("div",{class:"chips"}), tb=$("div",{class:"tw"}); let cp="she";
+      const draw=()=>{
+        chips.querySelectorAll(".chip").forEach(x=>x.setAttribute("aria-pressed",x.dataset.p===cp));
+        const p=cp, n=p==="it"?TAIL:DOG, f=p==="it"?NUTS:RICE, h=hv(p), d=dz(p);
+        const rows=[["+",`${Sb(p)}${ap(p)} got ${n.en}.`,`${Sb(p)} ${h} ${n.en}.`],["−",`${Sb(p)} ${NT[h]} got ${n.en}.`,`${Sb(p)} ${NT[d]} have ${n.en}.`],
+          ["?",`${cap(h)} ${sb(p)} got ${n.en}?`,`${cap(d)} ${sb(p)} have ${n.en}?`],["Áno",short(p,1,"have"),short(p,1,"do")],["Nie",short(p,0,"have"),short(p,0,"do")],
+          ["jedlo",null,`${Sb(p)} ${h} ${f.en} for lunch.`]];
+        tb.innerHTML="";
+        tb.append($("table",{class:"cmp"},$("thead",{},$("tr",{},$("th",{},""),$("th",{},"have got"),$("th",{},"have"))),
+          $("tbody",{},rows.map(r=>$("tr",{},$("th",{},r[0]),r.slice(1).map(x=>$("td",{},x?$("button",{class:"say",onclick:()=>speak(x)},x):$("span",{class:"no"},"nepoužíva sa"))))))));
+      };
+      P7.forEach(p=>chips.append($("button",{class:"chip","data-p":p,onclick:()=>{cp=p;draw()}},sb(p))));
+      draw(); wrap.append($("p",{class:"hint"},"Vyber osobu a ťukni na vetu, vypočuješ si ju."),chips,tb); return wrap;
+    }},
+  voc:[...THINGS,...PETS,...BODY,...FOODS,...AFOOD]};
+
+const T_MEAL={name:"I have … for breakfast",src:"Unit 2 · Lesson 2 · Grammar",t3n:"Odpovedz",t3title:"Odpovedz krátko",
+  t3hint:"Odpovedz krátko podľa ✔ Áno / ✘ Nie: Yes, I do. / No, she doesn't.",
+  pList:q=>q.form==="q"?PQ:P7,
+  rnd(){const form=pick(["pos","neg","q"]), p=form==="q"?pick(PQ):pick(P7);return{p,f:pick(foods(p)),m:pick(MEALS),form,yes:coin()}},
+  gen({p,f,m,form,yes}){
+    const h=hv(p), d=dz(p), tail=`${f.en} for ${m.en}`;
+    const en={pos:`${Sb(p)} ${h} ${tail}.`,neg:`${Sb(p)} ${NT[d]} have ${tail}.`,q:`${cap(d)} ${sb(p)} have ${tail}?`}[form];
+    const sk=form==="q"?skQ(p,PR[p].ma,`${m.sk} ${f.acc}`):`${PR[p].sk} ${form==="neg"?"ne":""}${PR[p].ma} ${m.sk} ${f.acc}.`;
+    const gap=Math.random()<.3?gp(en.slice(0,en.lastIndexOf(" for ")+4),m.en,en.slice(-1),MEALS.map(x=>x.en))
+      :form==="pos"?gp(Sb(p),h,`${tail}.`,shuffle(["has","have","does",be(p)]))
+      :form==="neg"?gp(Sb(p),NT[d],`have ${tail}.`,shuffle(["doesn't","don't","hasn't",NT[be(p)]]))
+      :gp("",cap(d),`${sb(p)} have ${tail}?`,shuffle(["Does","Do","Has",cap(be(p))]));
+    const p2=p==="I"?"you":p, q2=form==="q"?en:`${cap(dz(p2))} ${sb(p2)} have ${tail}?`;
+    return{en,sk,gap,ya:short(p,1,"do"),na:short(p,0,"do"),
+      t3:qa(q2,skQ(p2,PR[p2].ma,`${m.sk} ${f.acc}`),p2,"do",yes,shuffle([short(p2,!yes,"do"),short(p2,yes,"have"),badAgree(p2,yes,"do")]))};
+  },
+  rule:{text:["<b>have</b> pri jedle znamená <b>jesť, mať na jedlo</b>: I have cereal for breakfast. = Na raňajky mám cereálie.",
+    "<b>for breakfast</b> = na raňajky, <b>for lunch</b> = na obed, <b>for dinner</b> = na večeru.",
+    "Otázka: <b>Do</b> you have …? <b>Does</b> he / she / it have …? Odpoveď: Yes, I <b>do</b>. / No, I <b>don't</b>. Yes, she <b>does</b>. / No, she <b>doesn't</b>."],
+    tips:["<b>She has</b> rice. ale <b>Does she have</b> rice? a <b>She doesn't have</b> rice. (po does / doesn't je vždy have)","Pri jedle nepoužívame got: <s>I've got cereal for breakfast.</s>"],
+    cols:[["+",{form:"pos"}],["−",{form:"neg"}],["?",{form:"q"}],["Áno",{form:"q"},"ya"],["Nie",{form:"q"},"na"]],
+    rows:P7.map(p=>({l:sb(p),par:{p,f:p==="it"?NUTS:CEREAL,m:MEALS[0],form:"pos",yes:true}}))},
+  voc:[...FOODS,...AFOOD], meals:true};
+
+const T_LIKE={name:"Do you like …?",src:"Unit 2 · Lesson 3 · Words and Grammar",t3n:"Odpovedz",t3title:"Odpovedz krátko",
+  t3hint:"Odpovedz krátko podľa ✔ Áno / ✘ Nie: Yes, I do. / No, he doesn't.",
+  pList:q=>q.form==="q"?PQ:P7,
+  rnd(){const form=pick(["pos","neg","q"]), p=form==="q"?pick(PQ):pick(P7);return{p,f:pick(foods(p)),form,yes:coin()}},
+  gen({p,f,form,yes}){
+    const d=dz(p), lk=s3(p)?"likes":"like";
+    const en={pos:`${Sb(p)} ${lk} ${f.en}.`,neg:`${Sb(p)} ${NT[d]} like ${f.en}.`,q:`${cap(d)} ${sb(p)} like ${f.en}?`}[form];
+    const sk=form==="q"?skQ(p,PR[p].ma,`${PR[p].rad} ${f.acc}`):`${PR[p].sk} ${form==="neg"?"ne":""}${PR[p].ma} ${PR[p].rad} ${f.acc}.`;
+    const gap=form==="pos"?gp(Sb(p),lk,`${f.en}.`,shuffle([s3(p)?"like":"likes",be(p)+" like","liking","does like"].filter(x=>x!=="does like"||!s3(p))))
+      :form==="neg"?gp(Sb(p),NT[d],`like ${f.en}.`,shuffle(["doesn't","don't",NT[be(p)],"hasn't"]))
+      :gp("",cap(d),`${sb(p)} like ${f.en}?`,shuffle(["Does","Do",cap(be(p)),"Has"]));
+    const p2=p==="I"?"you":p, a2=ansP(p2), q2=form==="q"?en:`${cap(dz(p2))} ${sb(p2)} like ${f.en}?`;
+    const likeWrong=yes?`Yes, ${sb(a2)} ${s3(a2)?"likes":"like"}.`:`No, ${sb(a2)} ${NT[dz(a2)]} like.`;
+    return{en,sk,gap,ya:short(p,1,"do"),na:short(p,0,"do"),
+      t3:qa(q2,skQ(p2,PR[p2].ma,`${PR[p2].rad} ${f.acc}`),p2,"do",yes,shuffle([short(p2,!yes,"do"),likeWrong,badAgree(p2,yes,"do")]))};
+  },
+  rule:{text:["<b>like</b> = mať rád. Pri <b>he, she, it</b> pridáme <b>-s</b>: she <b>likes</b> carrots.",
+    "Zápor: I <b>don't like</b>, she <b>doesn't like</b>. Otázka: <b>Do</b> you like …? <b>Does</b> he like …?",
+    "Krátka odpoveď: Yes, I <b>do</b>. / No, I <b>don't</b>. Yes, he <b>does</b>. / No, he <b>doesn't</b>."],
+    tips:["Po <b>doesn't</b> a <b>does</b> je like bez -s: She doesn't <s>likes</s> <b>like</b> peas.","V krátkej odpovedi už like nie je: <s>Yes, I like.</s> → <b>Yes, I do.</b>"],
+    cols:[["+",{form:"pos"}],["−",{form:"neg"}],["?",{form:"q"}],["Áno",{form:"q"},"ya"],["Nie",{form:"q"},"na"]],
+    rows:P7.map(p=>({l:sb(p),par:{p,f:p==="it"?MEAT:CARROTS,form:"pos",yes:true}}))},
+  voc:[...FOODS,...AFOOD]};
+
+const T_WOULD={name:"I'd like some …",src:"Unit 2 · Lesson 1 · Functional language",t3n:"Odpovedz",t3title:"Odpovedz celou vetou",
+  t3hint:"Prečítaj si otázku a vyber správnu odpoveď. Pod otázkou je jedlo, ktoré si dotyčný želá.",
+  pList:()=>P7,
+  rnd(){const p=pick(P7);return{p,f:pick(foods(p)),m:pick(MEALS)}},
+  gen({p,f,m}){
+    const en=`${Sb(p)}'d like some ${f.en} for ${m.en}.`, sk=`${PR[p].sk} ${PR[p].would} ${m.sk} ${f.acc}.`, r=Math.random();
+    const gap=r<.4?gp(Sb(p),"would like",`some ${f.en} for ${m.en}.`,shuffle(["would likes","likes","is like"]))
+      :r<.7?gp(`${Sb(p)}'d like some ${f.en} for`,m.en,".",MEALS.map(x=>x.en))
+      :gp(`${Sb(p)}'d like`,"some",`${f.en} for ${m.en}.`,["a","any","an"]);
+    const p2=p==="I"?"you":p, a2=ansP(p2), mo=pick(MEALS.filter(x=>x!==m)), op=p2!==a2?p2:pick(P7.filter(x=>x!==a2&&x!=="it"));
+    const a=`${Sb(a2)}'d like some ${f.en} for ${m.en}.`, q=`What would ${sb(p2)} like for ${m.en}?`;
+    return{en,sk,gap,t3:{task:"Odpovedz celou vetou",q,hint:"jedlo: "+f.sk,a,say:q+" "+a,
+      opts:opts4(a,shuffle([`${Sb(a2)}'d like some ${f.en} for ${mo.en}.`,`${Sb(a2)}'d likes some ${f.en} for ${m.en}.`,`${Sb(op)}'d like some ${f.en} for ${m.en}.`,`${Sb(a2)} like some ${f.en} for ${m.en}.`]))}};
+  },
+  rule:{text:["<b>I'd like</b> = <b>I would like</b> = chcel by som. Je to zdvorilé, keď si niečo pýtaš.",
+    "<b>some</b> = trochu, nejaké: I'd like <b>some</b> pasta for lunch.",
+    "Pre všetky osoby je tvar rovnaký: I'd, you'd, he'd, she'd, it'd, we'd, they'd <b>like</b>."],
+    tips:["Po would je like vždy bez -s: She'd <s>likes</s> <b>like</b> some cake.","Otázka: <b>What would you like</b> for breakfast? – <b>I'd like</b> some cereal."],
+    cols:[["+ kladná veta",{}]],
+    rows:P7.map(p=>({l:sb(p),par:{p,f:p==="it"?SEEDS:PASTA,m:MEALS[1]}}))},
+  voc:[...FOODS,...AFOOD], meals:true};
+
+const T_GOTQ={name:"Have you got a …?",src:"Unit 1 · Lesson 2 · Grammar",t3n:"Odpovedz",t3title:"Odpovedz krátko",
+  t3hint:"Odpovedz krátko podľa ✔ Áno / ✘ Nie: Yes, I have. / No, she hasn't.",
+  pList:()=>PQ, nPool:q=>things(q.p),
+  rnd(){const p=pick(PQ);return{p,n:pick(things(p)),yes:coin(),k:coin()?"v":"a"}},
+  gen({p,n,yes,k}){
+    const en=`${cap(hv(p))} ${sb(p)} got ${anyN(n)}?`, sk=skQ(p,PR[p].ma,n.acc), a=ansP(p), ans=short(p,yes,"have");
+    const gap=k==="v"?gp("",cap(hv(p)),`${sb(p)} got ${anyN(n)}?`,shuffle(["Have","Has","Do","Does",cap(be(p))]))
+      :{...gp(`${en} – ${yes?"Yes":"No"}, ${sb(a)}`,yes?hv(a):NT[hv(a)],".",yes?shuffle([swapH(hv(a)),dz(a),be(a)]):shuffle([NT[swapH(hv(a))],NT[dz(a)],NT[be(a)]])),
+        full:en+" – "+ans,sk:sk+" – "+(yes?"Áno.":"Nie.")};
+    return{en,sk,alts:[`${cap(dz(p))} ${sb(p)} have ${anyN(n)}?`],gap,ya:short(p,1,"have"),na:short(p,0,"have"),
+      t3:qa(en,sk,p,"have",yes,shuffle([short(p,!yes,"have"),short(p,yes,"do"),badAgree(p,yes,"have")]))};
+  },
+  rule:{text:["Otázka s have got: <b>Have</b> you got a …? <b>Has</b> he / she / it got a …?",
+    "Krátka odpoveď: Yes, I <b>have</b>. / No, I <b>haven't</b>. Yes, she <b>has</b>. / No, she <b>hasn't</b>."],
+    tips:["V krátkej odpovedi už got nie je: <s>Yes, I have got.</s> → <b>Yes, I have.</b>","Pri množnom čísle: Have you got <b>any</b> crayons?",
+      "Na otázku <b>Have you …?</b> odpovedáš o sebe: Yes, <b>I</b> have."],
+    cols:[["? otázka",{}],["Áno",{},"ya"],["Nie",{},"na"]],
+    rows:PQ.map(p=>({l:sb(p),par:{p,n:p==="it"?TAIL:PCASE,yes:true,k:"v"}}))},
+  voc:[...THINGS,...PETS,...BODY]};
+
+const WHO=["I","we","he","she","they"], OWN=["your","his","her","their"], OWN_BAD={your:"you",his:"he",her:"she",their:"they"};
+const T_CAN={name:"Can I use your …?",src:"Unit 1 · Lesson 1 · Functional language",t3n:"Vyber",t3title:"Otázka a odpoveď",
+  t3hint:"Vyber správnu otázku alebo správnu odpoveď.",
+  nPool:()=>THINGS, ok:q=>!((q.w==="he"&&q.o==="his")||(q.w==="she"&&q.o==="her")||(q.w==="they"&&q.o==="their")),
+  rnd(){let q;do q={w:Math.random()<.5?"I":pick(WHO),o:Math.random()<.5?"your":pick(OWN),n:pick(THINGS),k:Math.random(),k2:coin()};while(!T_CAN.ok(q));return q},
+  gen({w,o,n,k,k2}){
+    const b=bare(n), en=`Can ${sb(w)} use ${o} ${b}?`, po=o==="your"?TVOJ[n.g]:{his:"jeho",her:"jej",their:"ich"}[o], ans="Sure! Here you are.";
+    const sk=`${PR[w].can}${w==="I"||w==="we"?"":" "+PR[w].sk.toLowerCase()} použiť ${po} ${n.acc}?`;
+    const gap=k<.3?gp(`Can ${sb(w)}`,"use",`${o} ${b}?`,shuffle(["uses","using","to use"]))
+      :k<.5?gp("","Can",`${sb(w)} use ${o} ${b}?`,shuffle(["Am","Have","Is","Are"].filter(x=>x!==cap(be(w))||x==="Am")))
+      :k<.8?gp(`Can ${sb(w)} use`,o,`${b}?`,shuffle([...OWN.filter(x=>x!==o),OWN_BAD[o]]))
+      :{...gp(`${en} – Sure! Here you`,"are",".",["is","am","go"]),full:en+" – "+ans};
+    const t3=k2?{task:"Vyber správnu odpoveď",q:en,hint:sk,a:ans,say:en+" "+ans,opts:opts4(ans,shuffle(["Yes, I have.","Sure! Here you is.","Yes, I use.","Sure! Here are you."]))}
+      :{task:"Vyber správnu otázku",q:null,hint:sk,a:en,opts:opts4(en,shuffle([`Can ${sb(w)} uses ${o} ${b}?`,`${Sb(w)} can use ${o} ${b}?`,`Can ${sb(w)} use ${OWN_BAD[o]} ${b}?`,`Do ${sb(w)} can use ${o} ${b}?`]))};
+    return{en,sk,gap,t3,ya:ans};
+  },
+  rule:{text:["Keď si chceš niečo požičať, opýtaš sa: <b>Can I use your …?</b> = Môžem použiť tvoj …?",
+    "Odpoveď: <b>Sure! Here you are.</b> = Jasné! Nech sa páči.",
+    "Pýtať sa môžeš aj za iných (Can <b>we</b> / <b>he</b> / <b>she</b> / <b>they</b> …?) a aj na vec niekoho iného: <b>his</b> (jeho), <b>her</b> (jej), <b>their</b> (ich)."],
+    tips:["Po <b>can</b> je sloveso bez -s a bez to: Can she <s>uses</s> <b>use</b> your ruler?","<b>your</b> = tvoj. <s>Can I use you ruler?</s> je zle."],
+    cols:[["? otázka",{}]],
+    rows:[["I","your"],["I","his"],["I","her"],["I","their"],["we","your"],["he","your"],["she","your"],["they","your"]].map(([w,o])=>({l:sb(w),par:{w,o,n:RULER,k:0,k2:true}}))},
+  voc:THINGS};
+
+const T_OURS={name:"We've got our …",src:"Unit 1 · Lesson 3 · Words and Grammar",t3n:"Zmeň",t3title:"Zmeň osobu",
+  t3hint:"Povedz tú istú vetu o inej osobe. Pozor na 's / 've a na my, your, his, her, its, our, their.",
+  pList:()=>P7, nPool:q=>q.p==="it"?ITTOYS:THINGS,
+  rnd(){const p=pick(P7);return{p,n:pick(T_OURS.nPool({p})),s0:pick(P7.filter(x=>x!==p&&x!=="it"))}},
+  gen({p,n,s0}){
+    const b=bare(n), en=`${Sb(p)}${ap(p)} got ${PR[p].poss} ${b}.`, sk=`${PR[p].sk} ${PR[p].ma} ${SVOJ[n.g]} ${n.acc}.`;
+    if(!s0||s0===p) s0=pick(P7.filter(x=>x!==p&&x!=="it"));
+    const gap=gp(`${Sb(p)}${ap(p)} got`,PR[p].poss,`${b}.`,shuffle(P7.map(x=>PR[x].poss).filter(x=>x!==PR[p].poss)));
+    const src=`${Sb(s0)}${ap(s0)} got ${PR[s0].poss} ${b}.`, x3=pick(P7.filter(x=>x!==p&&x!==s0));
+    return{en,sk,gap,t3:{task:"Zmeň vetu pre: "+Sb(p),q:src,hint:sk,a:en,
+      opts:opts4(en,shuffle([`${Sb(p)}${ap(p)} got ${PR[s0].poss} ${b}.`,`${Sb(p)}${ap(p)==="'s"?"'ve":"'s"} got ${PR[p].poss} ${b}.`,`${Sb(p)}${ap(p)} got ${PR[x3].poss} ${b}.`]))}};
+  },
+  rule:{text:["Komu niečo patrí: I – <b>my</b>, you – <b>your</b>, he – <b>his</b>, she – <b>her</b>, it – <b>its</b>, we – <b>our</b>, they – <b>their</b>.",
+    "We've got <b>our</b> football boots. They've got <b>their</b> trainers."],
+    tips:["<b>its</b> (bez apostrofu) = jeho / jej (zvieratka alebo veci). <b>it's</b> = it is alebo it has.","Po slovensky často hovoríme <b>svoj</b>: Mám svoje pastelky. = I've got <b>my</b> crayons."],
+    cols:[["+ kladná veta",{}]],
+    rows:P7.map(p=>({l:sb(p),par:{p,n:p==="it"?BALL:SBAG,s0:"I"}}))},
+  voc:THINGS};
+
+const TOPICS=[T_GOT,T_HAVE,T_DIFF,T_MEAL,T_LIKE,T_WOULD,T_GOTQ,T_CAN,T_OURS];
+
+// ---------- Speech (the phone's English voice) ----------
+let VO=null;
+const canSpeak=typeof speechSynthesis!=="undefined";
+function pickVoice(){try{const v=speechSynthesis.getVoices();VO=v.find(x=>/^en[-_]GB/i.test(x.lang))||v.find(x=>/^en/i.test(x.lang))||null}catch(e){}}
+if(canSpeak){pickVoice();try{speechSynthesis.addEventListener("voiceschanged",pickVoice)}catch(e){}}
+function speak(t){try{if(!canSpeak)return;const u=new SpeechSynthesisUtterance(t.replace(/ – /g,". "));u.lang="en-GB";if(VO)u.voice=VO;u.rate=.85;speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){}}
+const spkIcon=()=>{const d=document.createElement("span");d.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 8v8a4.5 4.5 0 0 0 2.5-4zM14 3.2v2.1a7 7 0 0 1 0 13.4v2.1a9 9 0 0 0 0-17.6z"/></svg>';return d.firstChild};
+
+// ---------- Checking typed sentences ----------
+// canon expands contractions so "I've got" = "I have got" and "doesn't" = "does not"; bare drops apostrophes and punctuation
+const canon=s=>norm(s).replace(/[.,!?;:–—]/g," ").replace(/\bcan't\b/g,"can not").replace(/\bcannot\b/g,"can not").replace(/n't\b/g," not")
+  .replace(/'ve\b/g," have").replace(/'d\b/g," would").replace(/'m\b/g," am").replace(/'re\b/g," are").replace(/'s got\b/g," has got").replace(/'s\b/g," is").replace(/\s+/g," ").trim();
+const plain=s=>norm(s).replace(/'/g,"").replace(/[.,!?;:–—]/g," ").replace(/\s+/g," ").trim();
+function targets(it){const t=[it.en,...(it.alts||[])];return [...t,...t.filter(x=>/\bany /.test(x)).map(x=>x.replace(/\bany /,""))]}
+
+// ---------- Exercise items ----------
+const KINDS=["gap","t3","listen","order","write"], N_STEP=10;
+function makeItems(T,n,kind){const out=[],seen=new Set();let g=0;while(out.length<n&&g++<300){const par=T.rnd(),it=T.gen(par);if(seen.has(it.en))continue;seen.add(it.en);out.push({T,par,it,kind})}return out}
+// Sentences that differ from the right one in one thing (person, + / − / ?, noun, meal), for the listening step
+function variants(T,par){
+  const G=[], add=(grp,q)=>{if(!T.ok||T.ok(q))grp.push(q)};
+  const fix=q=>{if(q.n&&T.nPool&&!T.nPool(q).includes(q.n))q.n=pick(T.nPool(q));if(q.f&&!foods(q.p).includes(q.f))q.f=pick(foods(q.p));return q};
+  if(par.p){const g=[];(T.pList?T.pList(par):P7).filter(x=>x!==par.p).forEach(v=>add(g,fix({...par,p:v})));G.push(g)}
+  if(par.w){const g=[];WHO.filter(x=>x!==par.w).forEach(v=>add(g,{...par,w:v}));G.push(g)}
+  if(par.o){const g=[];OWN.filter(x=>x!==par.o).forEach(v=>add(g,{...par,o:v}));G.push(g)}
+  if("neg" in par)G.push([{...par,neg:!par.neg}]);
+  if(par.form){const g=[];["pos","neg","q"].filter(x=>x!==par.form&&!(x==="q"&&par.p==="I")).forEach(v=>add(g,{...par,form:v}));G.push(g)}
+  if(par.n&&T.nPool){const g=[];T.nPool(par).filter(x=>x!==par.n).forEach(v=>add(g,{...par,n:v}));G.push(g)}
+  if(par.f){const g=[];foods(par.p).filter(x=>x!==par.f).forEach(v=>add(g,{...par,f:v}));G.push(g)}
+  if(par.m){const g=[];MEALS.filter(x=>x!==par.m).forEach(v=>add(g,{...par,m:v}));G.push(g)}
+  const S=shuffle(G).map(shuffle), out=[];
+  for(let i=0;S.some(g=>g.length>i);i++)S.forEach(g=>g[i]&&out.push(g[i]));
+  return out;
+}
+function listenOpts(e){
+  const seen=new Set([e.it.sk]), out=[];
+  for(const q of variants(e.T,e.par)){if(out.length===3)break;const s=e.T.gen(q).sk;if(!seen.has(s)){seen.add(s);out.push(s)}}
+  for(let g=0;out.length<3&&g<50;g++){const s=e.T.gen(e.T.rnd()).sk;if(!seen.has(s)){seen.add(s);out.push(s)}}
+  return shuffle([e.it.sk,...out]);
+}
+
+// ---------- App state and layout ----------
+const app=document.getElementById("app"), rail=document.getElementById("rail"), pickEl=document.getElementById("pick");
+let tab="learn", cur=0, step=0, done=new Set();
+const stepNames=T=>[["Pravidlo"],["Doplň"],[T.t3n],["Počúvaj"],["Poskladaj"],["Napíš"]];
+const TITLES={gap:"Doplň slovo",listen:"Počúvaj a vyber",order:"Poskladaj vetu",write:"Napíš po anglicky"};
+const HINTS={gap:"Vyber slovo, ktoré patrí na prázdne miesto. Pod vetou je preklad.",
+  listen:"Vypočuj si anglickú vetu a vyber, čo znamená po slovensky.",
+  order:"Poskladaj anglickú vetu zo slov. Ťuknutím na slovo vo vete ho vrátiš späť.",
+  write:"Napíš vetu po anglicky. Skrátené tvary (I've, doesn't) aj celé tvary (I have, does not) sú správne. Pomôcka ukáže ďalšie slovo."};
+const kindTitle=(T,k)=>k==="t3"?T.t3title:TITLES[k], kindHint=(T,k)=>k==="t3"?T.t3hint:HINTS[k];
+
+function drawPick(){
+  pickEl.hidden=tab!=="learn"; pickEl.innerHTML="";
+  if(tab!=="learn") return;
+  const box=$("div",{class:"chips"});
+  TOPICS.forEach((T,i)=>box.append($("button",{class:"chip","aria-pressed":i===cur,onclick:()=>{cur=i;step=0;done.clear();render()}},(i+1)+". "+T.name)));
+  pickEl.append($("h3",{},"Téma "+(cur+1)+" z "+TOPICS.length),box);
+}
+function drawRail(){
+  rail.hidden=tab!=="learn"; rail.innerHTML="";
+  if(tab!=="learn") return;
+  stepNames(TOPICS[cur]).forEach((s,i)=>rail.append($("button",{class:"st"+(i===step?" on":"")+(done.has(i)?" done":""),onclick:()=>{step=i;render()}},$("b",{},String(i+1)),s[0])));
+}
+function render(){
+  [["t-learn","learn"],["t-rev","rev"]].forEach(([id,t])=>document.getElementById(id).setAttribute("aria-selected",tab===t));
+  drawPick(); drawRail(); app.innerHTML="";
+  if(canSpeak)try{speechSynthesis.cancel()}catch(e){}
+  if(tab==="rev") return reviewSetup();
+  const T=TOPICS[cur], next=()=>{done.add(step);if(step<5){step++;render();window.scrollTo({top:0})}else finale()};
+  if(step===0) return rule(T,next);
+  const kind=KINDS[step-1];
+  drill(()=>makeItems(T,N_STEP,kind),next,kindTitle(T,kind),kindHint(T,kind),false);
+}
+document.getElementById("t-learn").onclick=()=>{tab="learn";render()};
+document.getElementById("t-rev").onclick=()=>{tab="rev";render()};
+
+// Step 1: the rule, a table of all persons and the topic's words
+function rule(T,next){
+  const c=$("section",{class:"card"});app.append(c);
+  c.append($("h2",{},T.name),$("p",{class:"src"},"Učebnica: "+T.src));
+  T.rule.text.forEach(h=>c.append(html("p",h)));
+  if(T.rule.custom) c.append(T.rule.custom());
+  else{
+    let col=0; const chips=$("div",{class:"chips"}), box=$("div",{class:"rt"});
+    const draw=()=>{
+      chips.querySelectorAll(".chip").forEach((x,i)=>x.setAttribute("aria-pressed",i===col));
+      box.innerHTML=""; const [,ov,f]=T.rule.cols[col];
+      T.rule.rows.forEach(r=>{const it=T.gen({...r.par,...ov}), en=it[f||"en"], sk=f?"":it.sk;
+        box.append($("button",{class:"rr",onclick:()=>speak(en)},$("b",{},r.l),$("span",{},$("span",{class:"e"},en),sk?$("span",{class:"s"},sk):null)))});
+    };
+    if(T.rule.cols.length>1) T.rule.cols.forEach(([h],i)=>chips.append($("button",{class:"chip",onclick:()=>{col=i;draw()}},h)));
+    draw(); c.append($("p",{class:"hint"},"Ťukni na vetu a vypočuješ si ju."),chips,box);
+  }
+  if(T.rule.tips) c.append($("div",{class:"tip"},$("b",{},"Pozor!"),T.rule.tips.map(h=>html("p",h))));
+  c.append(vocab(T));
+  c.append($("div",{class:"row"},$("button",{class:"btn sun",onclick:next},"Rozumiem, ideme cvičiť ▶")));
+}
+function vocab(T){
+  const d=$("details",{},$("summary",{},"Slovíčka v tejto téme")), groups={};
+  T.voc.forEach(n=>(groups[n.u]=groups[n.u]||[]).push(n));
+  for(const u in groups) d.append($("div",{class:"fs"},$("h3",{},u),$("div",{class:"words"},groups[u].map(n=>$("div",{},$("b",{},bare(n)),$("span",{},n.sk))))));
+  if(T.meals) d.append($("div",{class:"fs"},$("h3",{},"Jedlá dňa"),$("div",{class:"words"},MEALS.map(m=>$("div",{},$("b",{},m.en),$("span",{},m.w))))));
+  return d;
+}
+
+// Steps 2–6 and the review: one sentence at a time; a wrong one comes back later in the round (at most three times)
+function drill(make,onDone,title,hint,review,list){
+  const L=list||make();
+  let queue=shuffle(L).map(e=>({e,tries:0})), total=queue.length, firstOk=0, doneN=0, wrong=[];
+  const c=$("section",{class:"card"});app.append(c);
+  const show=()=>{
+    if(!queue.length) return result();
+    const q=queue[0], e=q.e, it=e.it, T=e.T; c.innerHTML="";
+    c.append($("h2",{},review?kindTitle(T,e.kind):title),$("p",{class:"hint"},review?kindHint(T,e.kind):hint),
+      $("div",{class:"meta"},$("span",{},"Správne na prvý pokus: "+firstOk),$("span",{},doneN+" / "+total)),
+      $("div",{class:"bar"},$("i",{style:"width:"+(doneN/total*100)+"%"})));
+    if(review) c.append($("p",{class:"src",style:"margin:0"},"Téma: "+T.name));
+    const box=$("div",{class:"fs"});c.append(box);
+    const answered=(ok,full,sk,note)=>{
+      q.tries++;
+      if(ok){ if(q.tries===1)firstOk++; doneN++; queue.shift(); }
+      else { if(!wrong.includes(e))wrong.push(e); queue.shift(); if(q.tries<3)queue.push(q); else doneN++; }
+      speak(full);
+      const fb=ok?$("div",{class:"fb ok"},"Výborne! ",$("span",{},full),sk?$("small",{},sk):null)
+                 :$("div",{class:"fb bad"},"Ešte nie. Správne: ",$("span",{},full),sk?$("small",{},sk):null);
+      const nb=$("button",{class:"btn",onclick:show},"Ďalej ▶");
+      c.append(fb); if(note) c.append($("div",{class:"fb note"},note)); c.append($("div",{class:"row"},nb)); nb.focus();
+    };
+    // Buttons that lock after one tap and mark the right answer
+    const choices=(opts,a,cls,onPick)=>{const o=$("div",{class:"opts"+(cls?" "+cls:"")});
+      opts.forEach(x=>{const b=$("button",{class:"opt",onclick:()=>{o.querySelectorAll("button").forEach(y=>{y.disabled=true;if(y.textContent===a)y.classList.add("ok")});if(x!==a)b.classList.add("bad");onPick(x)}},x);o.append(b)});return o};
+    if(e.kind==="gap"){
+      const g=it.gap, [pre,post]=g.txt.split("___"), slot=$("span",{class:"gap"}," ");
+      box.append($("span",{class:"lbl"},"Doplň"),$("p",{class:"sent"},pre,slot,post),$("p",{class:"skl"},g.sk||it.sk),
+        choices(g.opts,g.a,"",x=>{slot.textContent=g.a;slot.classList.add(x===g.a?"ok":"bad");answered(x===g.a,g.full||it.en,g.sk||it.sk)}));
+    }
+    if(e.kind==="t3"){
+      const t=it.t3;
+      box.append($("span",{class:"lbl"},t.task));
+      if(t.q){box.append($("p",{class:"sent"},t.q));if(t.hint)box.append($("p",{class:"skl"},t.hint))}
+      else box.append($("p",{class:"sent sk"},t.hint));
+      if(t.clue!=null) box.append($("span",{class:"clue "+(t.clue?"y":"n")},t.clue?"✔ Áno":"✘ Nie"));
+      box.append(choices(t.opts,t.a,"one",x=>answered(x===t.a,t.q?t.q+" – "+t.a:t.a,null)));
+    }
+    if(e.kind==="listen"){
+      if(canSpeak){box.append($("span",{class:"lbl"},"Stlač a vypočuj si vetu"),$("button",{class:"speak",onclick:()=>speak(it.en)},spkIcon(),"Prehrať vetu"));setTimeout(()=>speak(it.en),250)}
+      else box.append($("span",{class:"lbl"},"po anglicky"),$("p",{class:"sent"},it.en),$("p",{class:"hint",style:"text-align:center"},"Tento prehliadač nevie čítať nahlas, preto je veta napísaná."));
+      box.append(choices(listenOpts(e),it.sk,"one",x=>answered(x===it.sk,it.en,it.sk)));
+    }
+    if(e.kind==="order"){
+      const end=/[.?!]$/.test(it.en)?it.en.slice(-1):"", words=it.en.slice(0,end?-1:undefined).split(" ");
+      const line=$("div",{class:"line"}), pool=$("div",{class:"pool"}); let picked=[];
+      const drawLine=()=>{line.innerHTML="";picked.forEach((p,i)=>line.append($("button",{class:"wt",onclick:()=>{if(line.dataset.done)return;picked.splice(i,1);p.b.disabled=false;drawLine()}},p.w)));if(picked.length)line.append($("span",{class:"end"},end))};
+      let tiles=shuffle(words.map((w,i)=>({w,i}))); if(words.length>1)for(let g=0;g<5&&tiles.every((t,i)=>t.i===i);g++)tiles=shuffle(tiles);
+      tiles.forEach(t=>{const b=$("button",{class:"wt",onclick:()=>{picked.push({w:t.w,b});b.disabled=true;drawLine();
+        if(picked.length===words.length){line.dataset.done=1;undo.disabled=true;answered(picked.map(p=>p.w).join(" ")===words.join(" "),it.en,it.sk)}}},t.w);pool.append(b)});
+      const undo=$("button",{class:"btn ghost",onclick:()=>{const p=picked.pop();if(p){p.b.disabled=false;drawLine()}}},"⌫ Späť");
+      drawLine(); box.append($("span",{class:"lbl"},"po slovensky"),$("p",{class:"sent sk"},it.sk),line,pool,$("div",{class:"row"},undo));
+    }
+    if(e.kind==="write"){
+      box.append($("span",{class:"lbl"},"po slovensky"),$("p",{class:"sent sk"},it.sk));
+      const inp=$("input",{type:"text",autocomplete:"off",autocapitalize:"sentences",spellcheck:"false","aria-label":"Napíš vetu po anglicky"});
+      let hinted=0; const ws=it.en.split(" ");
+      const check=()=>{if(!inp.value.trim())return;inp.disabled=true;okb.disabled=true;hb.disabled=true;
+        const ts=targets(it), v=inp.value, exact=ts.some(t=>canon(t)===canon(v)), almost=!exact&&ts.some(t=>plain(t)===plain(v));
+        answered(exact||almost,it.en,it.sk,almost?"Skoro presne! Nezabudni na apostrof ('): "+it.en:(!exact?"Tvoja odpoveď: "+v:null))};
+      inp.addEventListener("keydown",ev=>{if(ev.key==="Enter")check()});
+      const okb=$("button",{class:"btn",onclick:check},"Skontrolovať");
+      const hb=$("button",{class:"btn ghost",onclick:()=>{hinted=Math.min(ws.length,hinted+1);inp.placeholder=ws.slice(0,hinted).join(" ")+(hinted<ws.length?" …":"");inp.focus()}},"Pomôcka");
+      box.append(inp,$("div",{class:"row"},hb,okb)); setTimeout(()=>inp.focus(),50);
+    }
+  };
+  const result=()=>{
+    c.innerHTML="";
+    const pct=Math.round(firstOk/total*100);
+    c.append($("h2",{},"Hotovo!"),$("div",{class:"big"},firstOk+" / "+total),
+      $("p",{class:"hint",style:"text-align:center"},pct>=90?"Super, toto už vieš!":pct>=60?"Dobre! Chybné vety si ešte zopakuj.":"Skús to ešte raz, pôjde to lepšie."));
+    if(wrong.length) c.append($("div",{class:"fs"},$("h3",{},"Tieto vety si zopakuj"),$("div",{class:"list"},wrong.map(e=>$("span",{},e.kind==="t3"&&e.it.t3.q?e.it.t3.q+" – "+e.it.t3.a:e.kind==="t3"?e.it.t3.a:e.it.en)))));
+    c.append($("div",{class:"row"},
+      $("button",{class:"btn ghost",onclick:()=>{app.innerHTML="";drill(make,onDone,title,hint,review)}},"Ešte raz"),
+      wrong.length?$("button",{class:"btn ghost",onclick:()=>{app.innerHTML="";drill(make,onDone,title,hint,review,wrong)}},"Len chyby"):null,
+      $("button",{class:"btn sun",onclick:onDone},review?"Späť na výber":"Ďalší krok ▶")));
+  };
+  show();
+}
+
+function finale(){
+  app.innerHTML=""; drawRail();
+  const nt=cur<TOPICS.length-1?cur+1:-1;
+  app.append($("section",{class:"card"},$("h2",{},"Prešiel si všetkých 6 krokov!"),
+    $("p",{class:"hint"},"Túto tému už poznáš. Zajtra skús hneď krok 6 Napíš, či si ju ešte pamätáš."),
+    $("div",{class:"row"},$("button",{class:"btn ghost",onclick:()=>{step=0;done.clear();render()}},"Začať odznova"),
+      nt>=0?$("button",{class:"btn ghost",onclick:()=>{cur=nt;step=0;done.clear();render();window.scrollTo({top:0})}},"Téma "+(nt+1)+" ▶"):null,
+      $("button",{class:"btn sun",onclick:()=>{tab="rev";render()}},"Opakovanie ▶"))));
+}
+
+// Review: mixed sentences from the picked topics
+const REV={topics:new Set(TOPICS.map((_,i)=>i)),mode:"mix",count:15};
+function reviewSetup(){
+  const c=$("section",{class:"card"});app.append(c);
+  const all=TOPICS.map((_,i)=>i), tc=$("div",{class:"chips"});
+  const redraw=()=>{app.innerHTML="";reviewSetup()};
+  tc.append($("button",{class:"chip","aria-pressed":REV.topics.size===all.length,onclick:()=>{const on=REV.topics.size===all.length;REV.topics.clear();if(!on)all.forEach(i=>REV.topics.add(i));redraw()}},"Všetky"));
+  TOPICS.forEach((T,i)=>tc.append($("button",{class:"chip","aria-pressed":REV.topics.has(i),onclick:()=>{REV.topics.has(i)?REV.topics.delete(i):REV.topics.add(i);redraw()}},(i+1)+". "+T.name)));
+  const modes=[["mix","Všetko premiešané"],["gap","Doplň slovo"],["t3","Odpovedz / zmeň"],["listen","Počúvaj a vyber"],["order","Poskladaj vetu"],["write","Napíš po anglicky"]];
+  const mc=$("div",{class:"chips"});
+  modes.forEach(([k,t])=>mc.append($("button",{class:"chip","aria-pressed":REV.mode===k,onclick:ev=>{REV.mode=k;mc.querySelectorAll(".chip").forEach(x=>x.setAttribute("aria-pressed",x===ev.currentTarget))}},t)));
+  const cc=$("div",{class:"chips"});
+  [10,15,25].forEach(n=>cc.append($("button",{class:"chip","aria-pressed":REV.count===n,onclick:ev=>{REV.count=n;cc.querySelectorAll(".chip").forEach(x=>x.setAttribute("aria-pressed",x===ev.currentTarget))}},n+" viet")));
+  const err=$("p",{class:"fb bad",hidden:""},"Vyber aspoň jednu tému.");
+  c.append($("h2",{},"Opakovanie"),$("p",{class:"hint"},"Vyber témy a spôsob opakovania. Vety sa vytvoria náhodne zo slovíčok z učebnice."),
+    $("div",{class:"fs"},$("h3",{},"Témy"),tc),$("div",{class:"fs"},$("h3",{},"Spôsob"),mc),$("div",{class:"fs"},$("h3",{},"Počet"),cc),err,
+    $("div",{class:"row"},$("button",{class:"btn sun",onclick:()=>{
+      if(!REV.topics.size){err.hidden=false;return}
+      const ts=[...REV.topics].map(i=>TOPICS[i]), mode=REV.mode, n=REV.count;
+      const make=()=>{const out=[],seen=new Set();for(let g=0;out.length<n&&g<500;g++){const T=pick(ts),par=T.rnd(),it=T.gen(par),kind=mode==="mix"?pick(KINDS):mode;
+        if(seen.has(it.en))continue;seen.add(it.en);out.push({T,par,it,kind})}return out};
+      app.innerHTML="";
+      drill(make,()=>{app.innerHTML="";reviewSetup();window.scrollTo({top:0})},"","",true);
+    }},"Začať opakovanie ▶")));
+  const ov=$("section",{class:"card"},$("h2",{},"Prehľad tém"));
+  TOPICS.forEach((T,i)=>ov.append($("div",{class:"fs"},$("h3",{},(i+1)+". "+T.src),$("button",{class:"say",onclick:()=>{tab="learn";cur=i;step=0;done.clear();render();window.scrollTo({top:0})}},T.name+" ▶"))));
+  app.append(ov);
+}
+
+render();
+</script>
+<script>
+// Offline support: the service worker keeps a copy of the app on the phone.
+if("serviceWorker" in navigator) addEventListener("load",()=>navigator.serviceWorker.register("sw.js",{updateViaCache:"none"}).catch(()=>{}));
+
+// Update check: compare this copy's version with the online version.js; offer an update when the online one is newer.
+const VERSION=self.APP_VERSION||"";
+document.getElementById("ver").textContent=VERSION?"verzia "+VERSION:"";
+const newer=(a,b)=>{const x=a.split(".").map(Number),y=b.split(".").map(Number);for(let i=0;i<3;i++){if((x[i]||0)!==(y[i]||0))return (x[i]||0)>(y[i]||0)}return false};
+let updLater=false;
+async function checkUpdate(){
+  if(!VERSION||updLater||!navigator.onLine) return;
+  try{
+    const r=await fetch("version.js?check="+Date.now(),{cache:"no-store"});
+    if(!r.ok) return;
+    // Run the online copy of our own version.js against a plain object to read its version and changelog
+    const o={}; new Function("self",await r.text())(o);
+    if(o.APP_VERSION&&newer(o.APP_VERSION,VERSION)) showUpdate(o.APP_VERSION,(o.CHANGELOG||[]).filter(e=>newer(e.version,VERSION)));
+  }catch(e){}
+}
+function showUpdate(online,changes){
+  const box=document.getElementById("upd"); box.innerHTML="";
+  const go=$("button",{class:"btn sun",onclick:async()=>{
+    go.disabled=true; go.textContent="Aktualizujem…";
+    try{
+      const reg=await navigator.serviceWorker?.getRegistration();
+      if(reg){
+        await reg.update();
+        const sw=reg.installing||reg.waiting;
+        if(sw) await new Promise(ok=>{const t=setTimeout(ok,15000);sw.addEventListener("statechange",()=>{if(sw.state==="activated"||sw.state==="redundant"){clearTimeout(t);ok()}})});
+      }
+    }catch(e){}
+    location.reload();
+  }},"Aktualizovať");
+  box.append($("p",{},"Je dostupná nová verzia "+online+" (máš "+VERSION+")."));
+  if(changes.length) box.append($("div",{class:"news"},$("h3",{},"Čo je nové"),
+    changes.map(e=>$("div",{},$("b",{},"Verzia "+e.version),$("ul",{},e.changes.map(t=>$("li",{},t)))))));
+  box.append($("div",{class:"row"},go,$("button",{class:"btn ghost",onclick:()=>{updLater=true;box.hidden=true}},"Neskôr")));
+  box.hidden=false;
+}
+addEventListener("load",checkUpdate);
+document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")checkUpdate()});
+</script>
+</body></html>
