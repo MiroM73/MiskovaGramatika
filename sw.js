@@ -7,6 +7,7 @@ const CACHE = "gramatika-" + self.APP_VERSION;
 const FILES = [
   "./",
   "index.html",
+  "app.js",
   "version.js",
   "fonts.css",
   "fonts/baloo2-latin.woff2",
