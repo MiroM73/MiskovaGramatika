@@ -38,7 +38,7 @@ Grammar decisions to keep: with plain *have* the negative is **don't/doesn't hav
 
 ## Versioning and releasing
 
-Same as the sibling: bump `APP_VERSION` and add a Slovak CHANGELOG entry in `version.js`, commit, annotated tag `vX.Y.Z`, push with `--follow-tags`, `gh release create`. Current version: **1.0.1** (released 2026-11-04).
+Same as the sibling: bump `APP_VERSION` and add a Slovak CHANGELOG entry in `version.js`, commit, annotated tag `vX.Y.Z`, push with `--follow-tags`, `gh release create`. Current version: **1.0.2** (released 2026-11-05).
 
 ## Testing (Windows, Git Bash)
 

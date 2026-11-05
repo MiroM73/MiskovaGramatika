@@ -1,8 +1,11 @@
 // The app version and what changed in each version, newest first. The only place to change it:
 // the page shows the version, sw.js names its cache after it, and installed apps read the online
 // copy of this file to offer an update and list the changes made since their own version.
-self.APP_VERSION = "1.0.1";
+self.APP_VERSION = "1.0.2";
 self.CHANGELOG = [
+  { version: "1.0.2", date: "2026-11-05", changes: [
+    "Pri precvičovaní sa chybne zodpovedaná úloha vráti o pár úloh neskôr a opakuje sa, kým ju nezodpovieš správne."
+  ]},
   { version: "1.0.1", date: "2026-11-04", changes: [
     "Menšie tlačidlo s lupou vpravo dole, ktoré ukazuje zväčšenie a vráti ho na 100 %."
   ]},
