@@ -953,6 +953,26 @@ UNITS.forEach((u,i)=>{u.n=i+1;u.L.forEach((l,j)=>(l.topics||[]).forEach(T=>{T.un
 const TOPICS=UNITS.flatMap(u=>[0,1,2,4].flatMap(j=>u.L[j].topics));
 const unitTopics=(u,ls=[0,1,2,4])=>ls.flatMap(j=>UNITS[u].L[j].topics);
 
+// ---------- Progress kept on this device ----------
+// localStorage "gramatika-pokrok": per topic and exercise kind [right, wrong, score 0–1, time of the last answer].
+// The score moves 30 % towards each new answer (1 right, 0 wrong). Only an item's first try in a round counts.
+const PK="gramatika-pokrok";
+const PROG=(()=>{try{const p=JSON.parse(localStorage.getItem(PK));if(p&&p.v===1&&p.items)return p}catch(e){}return {v:1,items:{}}})();
+const saveProg=()=>{try{localStorage.setItem(PK,JSON.stringify(PROG))}catch(e){}};
+const pkey=(T,k)=>T.unit+"|"+T.name+"|"+k;
+function record(T,k,ok){const key=pkey(T,k), r=PROG.items[key]||[0,0,0,0];ok?r[0]++:r[1]++;r[2]=Math.round((r[2]*.7+(ok?.3:0))*1000)/1000;r[3]=Date.now();PROG.items[key]=r;saveProg()}
+// Status: 0 new, 1 to repeat (score under 0.6 after a mistake), 2 learning, 3 known (5+ answers, score at least 0.85, 90 % right)
+const kstat=r=>!r?0:r[1]&&r[2]<.6?1:r[0]+r[1]>=5&&r[2]>=.85&&r[0]>=9*r[1]?3:2;
+const agg=st=>st.every(x=>x===0)?0:st.includes(1)?1:st.every(x=>x===3)?3:2;
+const tstat=T=>agg(KINDS.map(k=>kstat(PROG.items[pkey(T,k)])));
+const PMARK=["","! ","• ","✔ "], PNAME=["nové","zopakovať","učíš sa","vieš"];
+// Weighted pick of a [topic, kind] pair for mixed rounds: what to repeat comes most often, known things rarely
+// (a bit more often when not practised for a week).
+const WT=[3,6,2,1];
+function wpick(pairs){const now=Date.now();let sum=0;
+  const ws=pairs.map(([T,k])=>{const r=PROG.items[pkey(T,k)], st=kstat(r), w=st===3&&now-r[3]>7*864e5?2:WT[st];sum+=w;return w});
+  let x=Math.random()*sum;for(let i=0;i<pairs.length;i++){x-=ws[i];if(x<0)return pairs[i]}return pairs[pairs.length-1]}
+
 // ---------- Speech (the phone's English voice) ----------
 let VO=null;
 const canSpeak=typeof speechSynthesis!=="undefined";
@@ -1006,18 +1026,18 @@ function drawPick(){
   pickEl.hidden=tab!=="learn"; pickEl.innerHTML="";
   if(tab!=="learn") return;
   const uc=$("div",{class:"chips"});
-  UNITS.forEach((u,i)=>uc.append($("button",{class:"chip","aria-pressed":i===cu,title:u.sk,onclick:()=>go(i,cl===5?5:Math.min(cl,5),0)},`${i+1} · ${u.en}`)));
+  UNITS.forEach((u,i)=>uc.append($("button",{class:"chip p"+agg(unitTopics(i).map(tstat)),"aria-pressed":i===cu,title:u.sk,onclick:()=>go(i,cl===5?5:Math.min(cl,5),0)},`${i+1} · ${u.en}`)));
   const lc=$("div",{class:"chips"});
-  LSHORT.forEach((n,j)=>lc.append($("button",{class:"chip","aria-pressed":j===cl,onclick:()=>go(cu,j,0)},n)));
+  LSHORT.forEach((n,j)=>lc.append($("button",{class:"chip p"+agg((UNITS[cu].L[j].topics||[]).map(tstat)),"aria-pressed":j===cl,onclick:()=>go(cu,j,0)},n)));
   const L=curLesson(), cap1=[LNAMES[cl],L.t,L.story,L.wf?"Writing focus: "+L.wf:null].filter(Boolean).join(" · ");
   pickEl.append($("h3",{},`Unit ${cu+1}: ${UNITS[cu].en} (${UNITS[cu].sk})`),uc,$("h3",{},cap1),lc);
   if(L.fl) pickEl.append($("p",{class:"src",style:"margin:0"},"Functional language: "+L.fl));
-  if(L.topics&&L.topics.length>1){const tc=$("div",{class:"chips"});L.topics.forEach((T,k)=>tc.append($("button",{class:"chip","aria-pressed":k===ct,onclick:()=>go(cu,cl,k)},T.name)));pickEl.append($("h3",{},"Témy tejto lekcie"),tc)}
+  if(L.topics&&L.topics.length>1){const tc=$("div",{class:"chips"});L.topics.forEach((T,k)=>tc.append($("button",{class:"chip p"+tstat(T),title:PNAME[tstat(T)],"aria-pressed":k===ct,onclick:()=>go(cu,cl,k)},T.name)));pickEl.append($("h3",{},"Témy tejto lekcie"),tc)}
 }
 function drawRail(){
   const T=curTopic(); rail.hidden=tab!=="learn"||!T; rail.innerHTML="";
   if(rail.hidden) return;
-  stepNames(T).forEach((s,i)=>rail.append($("button",{class:"st"+(i===step?" on":"")+(done.has(i)?" done":""),onclick:()=>{step=i;render()}},$("b",{},String(i+1)),s)));
+  stepNames(T).forEach((s,i)=>rail.append($("button",{class:"st"+(i===step?" on":"")+(done.has(i)?" done":"")+(i?" p"+kstat(PROG.items[pkey(T,KINDS[i-1])]):""),onclick:()=>{step=i;render()}},$("b",{},String(i+1)),s)));
 }
 function render(){
   [["t-learn","learn"],["t-rev","rev"]].forEach(([id,t])=>document.getElementById(id).setAttribute("aria-selected",tab===t));
@@ -1066,7 +1086,8 @@ function rule(T,next){
   c.append($("div",{class:"row"},$("button",{class:"btn sun",onclick:next},"Rozumiem, ideme cvičiť ▶")));
 }
 // A mixed round from several topics (story, project and review)
-const mixMake=(ts,n,mode)=>()=>{const out=[],seen=new Set();for(let g=0;out.length<n&&g<600;g++){const T=pick(ts),par=T.rnd(),it=T.gen(par),kind=mode&&mode!=="mix"?mode:pick(KINDS);
+const mixMake=(ts,n,mode)=>()=>{const out=[],seen=new Set(), pairs=ts.flatMap(T=>(mode&&mode!=="mix"?[mode]:KINDS).map(k=>[T,k]));
+  for(let g=0;out.length<n&&g<600;g++){const [T,kind]=wpick(pairs),par=T.rnd(),it=T.gen(par);
   if(seen.has(it.en))continue;seen.add(it.en);out.push({T,par,it,kind})}return out};
 function mixRound(ts,n,back){app.innerHTML="";window.scrollTo({top:0});drill(mixMake(ts,n),back,"","",true)}
 function storyCard(L){
@@ -1089,7 +1110,7 @@ function projectCard(L){
     wordBox([0,2,4].flatMap(j=>UNITS[cu].L[j].words||[]),"Slovíčka celého unitu"));
 }
 
-// Steps 2–6 and the mixed rounds: one sentence at a time; a wrong one comes back later in the round (at most three times)
+// Steps 2–6 and the mixed rounds: one sentence at a time; a wrong one comes back 2–3 sentences later until it is right
 function drill(make,onDone,title,hint,review,list){
   const L=list||make();
   let queue=shuffle(L).map(e=>({e,tries:0})), total=queue.length, firstOk=0, doneN=0, wrong=[];
@@ -1105,7 +1126,7 @@ function drill(make,onDone,title,hint,review,list){
     const add=(...xs)=>box.append(...xs.filter(x=>x!=null));
     const scene=sc=>sc?$("p",{class:"scene"},sc):null;
     const answered=(ok,full,sk,note)=>{
-      q.tries++;
+      q.tries++; if(q.tries===1)record(T,e.kind,ok);
       if(ok){ if(q.tries===1)firstOk++; doneN++; queue.shift(); }
       else { if(!wrong.includes(e))wrong.push(e); queue.shift(); queue.splice(Math.min(queue.length,2+Math.floor(Math.random()*2)),0,q); }
       speak(full);
@@ -1199,7 +1220,7 @@ function reviewSetup(){
   const cc=$("div",{class:"chips"});
   [10,15,25].forEach(n=>cc.append($("button",{class:"chip","aria-pressed":REV.count===n,onclick:ev=>{REV.count=n;cc.querySelectorAll(".chip").forEach(x=>x.setAttribute("aria-pressed",x===ev.currentTarget))}},n+" viet")));
   const err=$("p",{class:"fb bad",hidden:""},"Vyber aspoň jeden unit.");
-  c.append($("h2",{},"Opakovanie"),$("p",{class:"hint"},"Vyber unity a spôsob opakovania. Vety sa vytvoria náhodne zo slovíčok z učebnice."),
+  c.append($("h2",{},"Opakovanie"),$("p",{class:"hint"},"Vyber unity a spôsob opakovania. Vety sa vytvoria náhodne zo slovíčok z učebnice, najčastejšie z tém, v ktorých robíš chyby."),
     $("div",{class:"fs"},$("h3",{},"Unity"),uc),$("div",{class:"fs"},$("h3",{},"Spôsob"),mc),$("div",{class:"fs"},$("h3",{},"Počet"),cc),err,
     $("div",{class:"row"},$("button",{class:"btn sun",onclick:()=>{
       if(!REV.units.size){err.hidden=false;return}
@@ -1207,9 +1228,13 @@ function reviewSetup(){
       app.innerHTML="";
       drill(mixMake(ts,REV.count,REV.mode),()=>{app.innerHTML="";reviewSetup();window.scrollTo({top:0})},"","",true);
     }},"Začať opakovanie ▶")));
-  const ov=$("section",{class:"card"},$("h2",{},"Prehľad učebnice"));
+  const n=[0,0,0,0];TOPICS.forEach(T=>n[tstat(T)]++);
+  const ov=$("section",{class:"card"},$("h2",{},"Prehľad učebnice"),
+    $("p",{class:"prog"},[3,2,1,0].filter(i=>n[i]).map(i=>$("span",{class:"p"+i},PMARK[i]+PNAME[i]+": "+n[i]+(i===3?" tém":"")))),
+    $("p",{class:"hint"},"✔\u00a0vieš · •\u00a0učíš\u00a0sa · !\u00a0zopakovať (v téme alebo cvičení robíš chyby). Téma je zvládnutá, keď vieš všetkých 5 cvičení. Pokrok sa ukladá v tomto zariadení."),
+    $("div",{class:"row"},$("button",{class:"btn ghost",onclick:()=>{if(confirm("Naozaj vymazať celý pokrok v gramatike v tomto zariadení?")){for(const k in PROG.items)delete PROG.items[k];saveProg();render()}}},"Vynulovať pokrok")));
   UNITS.forEach((u,i)=>{const box=$("div",{class:"chips"});
-    u.L.forEach((l,j)=>(l.topics||[{name:l.story?"Story: "+l.story:"Project: "+l.en}]).forEach((T,k)=>box.append($("button",{class:"chip",onclick:()=>go(i,j,l.topics?k:0)},LSHORT[j]+": "+T.name))));
+    u.L.forEach((l,j)=>(l.topics||[{name:l.story?"Story: "+l.story:"Project: "+l.en}]).forEach((T,k)=>box.append($("button",{class:"chip"+(l.topics?" p"+tstat(T):""),onclick:()=>go(i,j,l.topics?k:0)},LSHORT[j]+": "+T.name))));
     ov.append($("div",{class:"fs"},$("h3",{},`Unit ${i+1} · ${u.en} · ${u.sk}`),box))});
   app.append(ov);
 }

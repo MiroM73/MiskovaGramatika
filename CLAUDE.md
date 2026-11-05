@@ -34,11 +34,13 @@ The app follows the textbook: **Unit 1–10**, each with **Lesson 1 Words (+ Fun
 - **`UNITS`**: per unit 6 lesson objects (topics, words, titles from the scans, story + wellbeing, project text + example topics). `T.src` and `T.unit` are filled in from it. `TOPICS` = all topics.
 - **UI**: `drawPick` (unit, lesson, topic chips), `drawRail` (6 steps), `rule`, `drill` (steps 2–6 and mixed rounds), `storyCard`, `projectCard`, `reviewSetup`, `finale`.
 
+- **Progress** (1.1.0, issue #3): localStorage `gramatika-pokrok` = `{v:1, items:{"unit|topicName|kind": [right, wrong, score, lastTime]}}`; the score moves 30 % towards each answer. `record()` runs on an item's first try in a `drill` round. `kstat` = 0 new / 1 to repeat (score < 0.6 after a mistake) / 2 learning / 3 known (5+ answers, score ≥ 0.85, 90 % right); `tstat(T)` and `agg` combine kinds, topics, lessons and units. Unit, lesson and topic chips and rail steps get classes `p0`–`p3` (✔ • ! markers in CSS). `mixMake` picks [topic, kind] pairs with `wpick` (to repeat ×6, new ×3, learning ×2, known ×1, ×2 after a week). The review card shows counts and "Vynulovať pokrok". A wrong item in `drill` comes back 2–3 items later until it is right (1.0.2). The store is meant to be synced across devices later (issue #4, Firebase); topic names are part of the key, so renaming a topic loses its progress.
+
 Grammar decisions to keep: with plain *have* the negative is **don't/doesn't have** (the user's first brief wrote "I haven't / she hasn't"); "I haven't" is taught only with *got*.
 
 ## Versioning and releasing
 
-Same as the sibling: bump `APP_VERSION` and add a Slovak CHANGELOG entry in `version.js`, commit, annotated tag `vX.Y.Z`, push with `--follow-tags`, `gh release create`. Current version: **1.0.2** (released 2026-11-05).
+Same as the sibling: bump `APP_VERSION` and add a Slovak CHANGELOG entry in `version.js`, commit, annotated tag `vX.Y.Z`, push with `--follow-tags`, `gh release create`. Current version: **1.1.0** (released 2026-11-05).
 
 ## Testing (Windows, Git Bash)
 
