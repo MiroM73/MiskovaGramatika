@@ -1107,7 +1107,7 @@ function drill(make,onDone,title,hint,review,list){
     const answered=(ok,full,sk,note)=>{
       q.tries++;
       if(ok){ if(q.tries===1)firstOk++; doneN++; queue.shift(); }
-      else { if(!wrong.includes(e))wrong.push(e); queue.shift(); if(q.tries<3)queue.push(q); else doneN++; }
+      else { if(!wrong.includes(e))wrong.push(e); queue.shift(); queue.splice(Math.min(queue.length,2+Math.floor(Math.random()*2)),0,q); }
       speak(full);
       const fb=ok?$("div",{class:"fb ok"},"Výborne! ",$("span",{},full),sk?$("small",{},sk):null)
                  :$("div",{class:"fb bad"},"Ešte nie. Správne: ",$("span",{},full),sk?$("small",{},sk):null);
