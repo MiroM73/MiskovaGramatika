@@ -47,3 +47,18 @@ Same as the sibling: bump `APP_VERSION` and add a Slovak CHANGELOG entry in `ver
 - git: `/c/Program Files/Git/cmd/git`, gh: `/c/Program Files/GitHub CLI/gh.exe` (not on PATH). No Node; Python 3.10 (`python -I`).
 - Copy the site to the scratchpad, inject a `<script>` before `</body>` that writes into `<pre id="TESTLOG">`, run headless Edge (`/c/Program Files (x86)/Microsoft/Edge/Application/msedge.exe --headless=new --dump-dom --virtual-time-budget=8000 file:///…`). Checks that caught real bugs: for every topic in `TOPICS` generate ~300 items and assert no "undefined", the answer is among unique options, `listenOpts` gives 4 distinct sentences, sentences end with . ? !, no double spaces; then click through every unit × lesson × topic (6 steps), the story/project rounds and a review round, watching `window.onerror` and any visible "null"/"undefined" text. Also read a sample of generated sentences for grammar and meaning (e.g. "What do dolphins eat?" had no true answer). Screenshots: `--screenshot --window-size=420,1500` (headless Edge has a ~492px minimum width, so the right edge looks cut off).
 - When patching app.js from Python, use raw strings: `"\b"` in a normal string becomes a backspace character inside a JS regex.
+
+## Working economically
+
+- `app.js` is ~1,240 lines / 122 KB. Do not read it whole. Use the map in
+  "app.js, top to bottom", grep for the symbol (`T_CAN`, `UNITS`, `drawPick` …)
+  and read only that range.
+- Content-only changes (words, sentences, one topic's data) need no plan:
+  edit, test that topic, commit.
+- Scale the test to the change. A change in one topic: generate and check items
+  for that topic only and click through its unit. Run the full sweep over
+  `TOPICS` and all units only when the sentence engine, `F(c)`, `WFT(c)`,
+  `UNITS` or the UI changed, and before a release.
+- Test logs print only failures and a final count, not every generated sentence.
+- Open the `scans/` images only when the task is about lesson titles or
+  textbook content.
